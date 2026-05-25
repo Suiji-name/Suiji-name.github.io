@@ -54,6 +54,7 @@
 </head>
 <body class="antialiased">
 
+<!-- LOADING -->
 <div id="loadingScreen" class="fixed inset-0 z-[200] bg-stone-950 flex items-center justify-center">
   <div class="text-center">
     <span class="text-5xl block mb-4">🐱</span>
@@ -111,9 +112,6 @@
     <div class="mb-6">
       <label class="text-xs uppercase tracking-widest text-stone-500 font-bold mb-2 block">外部链接（可选）</label>
       <input id="editorLink" type="url" class="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-stone-100 placeholder:text-stone-600 outline-none focus:border-amber-500/50 transition-colors text-sm" placeholder="https://example.com"/>
-    </div>
-    <div class="mb-6 p-3 rounded-xl bg-amber-500/10 border border-amber-500/20">
-      <p class="text-amber-400/80 text-xs">⚠️ 图片会保存在 GitHub 仓库中，建议单张不超过500KB。</p>
     </div>
     <div class="flex gap-3">
       <button onclick="closeEditor()" class="flex-1 py-3 bg-white/5 border border-white/10 text-stone-400 rounded-xl hover:bg-white/10 transition-colors text-sm font-medium">取消</button>
@@ -224,9 +222,44 @@
 </section>
 
 <!-- COLUMNS -->
-<section class="py-10 pb-24 px-6">
+<section class="py-10 px-6">
   <div class="max-w-3xl mx-auto reveal">
     <div class="grid grid-cols-1 md:grid-cols-2 gap-6" id="columnsBox"></div>
+  </div>
+</section>
+
+<!-- ========== GUESTBOOK 留言板 ========== -->
+<section class="py-10 px-6">
+  <div class="max-w-3xl mx-auto reveal">
+    <div class="flex items-center gap-3 mb-6">
+      <span class="text-2xl">💬</span>
+      <h2 class="font-serif text-2xl font-medium">访客留言</h2>
+    </div>
+    <div class="card p-6 md:p-8">
+      <p class="text-stone-500 text-sm mb-6">用 GitHub 账号登录后即可留言 ✨</p>
+
+      <!-- ============================================================
+           🔽👇 把你从 giscus.app 复制的代码粘贴到下面 👇🔽
+           替换掉下面的占位代码
+           ============================================================ -->
+      <script src="https://giscus.app/client.js"
+        data-repo="suiji-name/suiji-name.github.io"
+        data-repo-id="R_kgDOSnUBKg"
+        data-category="Announcements"
+        data-category-id="DIC_kwDOSnUBKs4C90cs"
+        data-mapping="pathname"
+        data-strict="0"
+        data-reactions-enabled="1"
+        data-emit-metadata="0"
+        data-input-position="bottom"
+        data-theme="preferred_color_scheme"
+        data-lang="zh-CN"
+        crossorigin="anonymous"
+        async>
+</script>
+      <!-- ============================================================ -->
+
+    </div>
   </div>
 </section>
 
@@ -250,7 +283,7 @@ const API_URL = `https://api.github.com/repos/${GH_OWNER}/${GH_REPO}/contents/${
 const SAVE_KEY = 'myBlogData';
 
 const DEFAULTS = {
-  name:'Double D', signature:'猫娘征服世界！',
+  name:'猫娘', signature:'猫娘征服世界！',
   bio:'在这里记录灵感、想法和一切有趣的事物。欢迎来到我的小世界 ✨',
   aboutTitle:'关于我',
   aboutContent:'<p>你好呀！我是一个喜欢创造和思考的人。</p><p>平时喜欢画画、写代码、看漫画，偶尔也会发呆想一些乱七八糟的事情。</p><p>如果你也有有趣的灵感，欢迎交流 🐾</p>',
@@ -275,24 +308,16 @@ let isAdmin=false, logoCount=0, logoTimer=null, data={}, editingPostId=null, fil
 // ==================== GITHUB API ====================
 function getToken(){ return sessionStorage.getItem('gh_token'); }
 
-async function ghHeaders(){
-  const token = getToken();
-  return { 'Authorization': `token ${token}`, 'Accept': 'application/vnd.github.v3+json', 'Content-Type': 'application/json' };
-}
-
 async function loadFromCloud(){
-  // 1. 尝试从 GitHub Pages 读取
   try{
     const res = await fetch(DATA_URL + '?t=' + Date.now());
     if(res.ok){ const json = await res.json(); if(json && json.name) return json; }
   }catch(e){ console.warn('Pages读取失败:', e); }
 
-  // 2. 尝试从 GitHub API 读取
   try{
-    const headers = {};
+    const headers = {'Accept':'application/vnd.github.v3+json'};
     const token = getToken();
     if(token) headers['Authorization'] = `token ${token}`;
-    headers['Accept'] = 'application/vnd.github.v3+json';
     const res = await fetch(API_URL, {headers});
     if(res.ok){
       const result = await res.json();
@@ -308,15 +333,13 @@ async function loadFromCloud(){
 
 async function saveToCloud(jsonStr){
   const token = getToken();
-  if(!token){ toast('⚠️ 未登录，无法保存到云端'); return; }
+  if(!token) return;
 
   try{
-    // 获取最新 SHA
-    const headers = await ghHeaders();
+    const headers = {'Authorization':`token ${token}`,'Accept':'application/vnd.github.v3+json','Content-Type':'application/json'};
     const getRes = await fetch(API_URL, {headers});
     if(getRes.ok){ const r = await getRes.json(); fileSha = r.sha; }
 
-    // 写入文件
     const body = {
       message: 'Update blog data - ' + new Date().toLocaleString('zh-CN'),
       content: btoa(unescape(encodeURIComponent(jsonStr))),
@@ -344,7 +367,6 @@ async function saveToCloud(jsonStr){
 async function load(){
   const cloud = await loadFromCloud();
   if(cloud){ data = {...DEFAULTS, ...cloud}; return; }
-  // 本地回退
   try{ const s=localStorage.getItem(SAVE_KEY); data=s?{...DEFAULTS,...JSON.parse(s)}:JSON.parse(JSON.stringify(DEFAULTS)); }
   catch{ data=JSON.parse(JSON.stringify(DEFAULTS)); }
   if(!data.posts) data.posts=[];
@@ -357,7 +379,6 @@ function save(){
   cleanData.columns.forEach(c=>{c.open=false;c.items.forEach(i=>i.open=false);});
   const jsonStr = JSON.stringify(cleanData);
   localStorage.setItem(SAVE_KEY, jsonStr);
-
   clearTimeout(saveTimer);
   saveTimer = setTimeout(()=>saveToCloud(jsonStr), 1500);
 }
@@ -367,47 +388,20 @@ async function tryLogin(){
   const token = document.getElementById('loginToken').value.trim();
   const errEl = document.getElementById('loginErr');
   if(!token){ errEl.textContent='请输入 Token'; errEl.classList.remove('hidden'); return; }
-
   try{
-    const res = await fetch('https://api.github.com/user', {
-      headers: {'Authorization':`token ${token}`, 'Accept':'application/vnd.github.v3+json'}
-    });
+    const res = await fetch('https://api.github.com/user', {headers:{'Authorization':`token ${token}`,'Accept':'application/vnd.github.v3+json'}});
     if(res.ok){
       sessionStorage.setItem('gh_token', token);
-      isAdmin = true;
-      closeLogin();
-      // 重新加载云端数据（用认证请求）
-      await load();
-      render();
+      isAdmin = true; closeLogin(); await load(); render();
       toast('欢迎回来，管理员 🐱');
-    }else{
-      errEl.textContent='Token 无效，请检查后重试';
-      errEl.classList.remove('hidden');
-    }
-  }catch(e){
-    errEl.textContent='网络错误，请检查连接';
-    errEl.classList.remove('hidden');
-  }
+    }else{ errEl.textContent='Token 无效'; errEl.classList.remove('hidden'); }
+  }catch(e){ errEl.textContent='网络错误'; errEl.classList.remove('hidden'); }
 }
 
-function logoutAdmin(){
-  sessionStorage.removeItem('gh_token');
-  isAdmin=false; render(); toast('已退出编辑模式');
-}
-
+function logoutAdmin(){ sessionStorage.removeItem('gh_token'); isAdmin=false; render(); toast('已退出编辑模式'); }
 function toggleAdmin(){ isAdmin ? logoutAdmin() : openLogin(); }
-
-function checkAuth(){
-  const token = sessionStorage.getItem('gh_token');
-  if(token) isAdmin = true;
-}
-
-function openLogin(){
-  document.getElementById('loginModal').classList.add('open');
-  document.getElementById('loginToken').value='';
-  document.getElementById('loginErr').classList.add('hidden');
-  setTimeout(()=>document.getElementById('loginToken').focus(),200);
-}
+function checkAuth(){ const token=sessionStorage.getItem('gh_token'); if(token) isAdmin=true; }
+function openLogin(){ document.getElementById('loginModal').classList.add('open'); document.getElementById('loginToken').value=''; document.getElementById('loginErr').classList.add('hidden'); setTimeout(()=>document.getElementById('loginToken').focus(),200); }
 function closeLogin(){ document.getElementById('loginModal').classList.remove('open'); }
 
 // ==================== IMAGE ====================
@@ -523,8 +517,7 @@ function openEditor(postId){
 }
 function closeEditor(){document.getElementById('editorModal').classList.remove('open');editingPostId=null;}
 function saveEditor(){
-  const title=document.getElementById('editorTitle').value.trim()||'无标题';
-  const content=document.getElementById('editorContent').innerHTML;const link=document.getElementById('editorLink').value.trim();
+  const title=document.getElementById('editorTitle').value.trim()||'无标题';const content=document.getElementById('editorContent').innerHTML;const link=document.getElementById('editorLink').value.trim();
   if(editingPostId){const p=data.posts.find(x=>x.id===editingPostId);if(p){p.title=title;p.content=content;p.link=link;save();renderPosts();toast('文章已更新 ✅');}}
   else{data.posts.unshift({id:Date.now(),title,content,date:today(),link,open:true});save();renderPosts();toast('文章已发布 🎉');}
   closeEditor();
