@@ -13,57 +13,57 @@
     }
   </script>
   <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body { font-family: 'Inter', sans-serif; background: #0c0a09; color: #f5f5f4; }
-    .font-serif { font-family: 'Playfair Display', serif; }
-    ::-webkit-scrollbar { width: 6px; }
-    ::-webkit-scrollbar-track { background: #1c1917; }
-    ::-webkit-scrollbar-thumb { background: #44403c; border-radius: 3px; }
+    *{margin:0;padding:0;box-sizing:border-box}
+    body{font-family:'Inter',sans-serif;background:#0c0a09;color:#f5f5f4}
+    .font-serif{font-family:'Playfair Display',serif}
+    ::-webkit-scrollbar{width:6px}
+    ::-webkit-scrollbar-track{background:#1c1917}
+    ::-webkit-scrollbar-thumb{background:#44403c;border-radius:3px}
 
-    .reveal {
-      opacity: 0; filter: blur(8px); transform: translateY(24px);
-      transition: all 1.2s cubic-bezier(0.16, 1, 0.3, 1);
-    }
-    .reveal.active { opacity: 1; filter: blur(0); transform: translateY(0); }
+    .reveal{opacity:0;filter:blur(8px);transform:translateY(24px);transition:all 1.2s cubic-bezier(.16,1,.3,1)}
+    .reveal.active{opacity:1;filter:blur(0);transform:translateY(0)}
 
-    .expandable { max-height: 0; overflow: hidden; transition: max-height 500ms cubic-bezier(0.16,1,0.3,1); }
-    .expandable.open { max-height: 2000px; }
-    .arrow { transition: transform 300ms; }
-    .arrow.rotated { transform: rotate(180deg); }
+    .expandable{max-height:0;overflow:hidden;transition:max-height 500ms cubic-bezier(.16,1,.3,1)}
+    .expandable.open{max-height:5000px}
+    .arrow{transition:transform 300ms}.arrow.rotated{transform:rotate(180deg)}
 
-    @keyframes shimmer {
-      0% { background-position: -200% center; }
-      100% { background-position: 200% center; }
-    }
-    .shimmer {
-      background: linear-gradient(90deg, #f5f5f4 0%, #fef3c7 25%, #f5f5f4 50%, #fef3c7 75%, #f5f5f4 100%);
-      background-size: 200% auto; -webkit-background-clip: text; background-clip: text;
-      -webkit-text-fill-color: transparent; animation: shimmer 6s linear infinite;
-    }
+    @keyframes shimmer{0%{background-position:-200% center}100%{background-position:200% center}}
+    .shimmer{background:linear-gradient(90deg,#f5f5f4 0%,#fef3c7 25%,#f5f5f4 50%,#fef3c7 75%,#f5f5f4 100%);background-size:200% auto;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;animation:shimmer 6s linear infinite}
 
-    .cursor-glow {
-      position: fixed; width: 400px; height: 400px; border-radius: 50%;
-      background: radial-gradient(circle, rgba(253,224,71,0.04) 0%, transparent 70%);
-      pointer-events: none; z-index: 9999; transform: translate(-50%, -50%);
-    }
+    .cursor-glow{position:fixed;width:400px;height:400px;border-radius:50%;background:radial-gradient(circle,rgba(253,224,71,.04) 0%,transparent 70%);pointer-events:none;z-index:9999;transform:translate(-50%,-50%)}
 
-    .toast { transform: translateY(100px); opacity: 0; transition: all 400ms cubic-bezier(0.16,1,0.3,1); }
-    .toast.show { transform: translateY(0); opacity: 1; }
+    .toast{transform:translateY(100px);opacity:0;transition:all 400ms cubic-bezier(.16,1,.3,1)}
+    .toast.show{transform:translateY(0);opacity:1}
 
-    .modal-bg { opacity: 0; pointer-events: none; transition: opacity 300ms; }
-    .modal-bg.open { opacity: 1; pointer-events: all; }
+    .modal-bg{opacity:0;pointer-events:none;transition:opacity 300ms}
+    .modal-bg.open{opacity:1;pointer-events:all}
 
-    [contenteditable="true"] { outline: 2px dashed rgba(253,224,71,0.3); outline-offset: 4px; border-radius: 4px; }
-    [contenteditable="true"]:focus { outline-color: rgba(253,224,71,0.6); background: rgba(253,224,71,0.03); }
+    [contenteditable="true"]{outline:2px dashed rgba(253,224,71,.3);outline-offset:2px;border-radius:4px}
+    [contenteditable="true"]:focus{outline-color:rgba(253,224,71,.6);background:rgba(253,224,71,.03)}
 
-    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.5} }
-    .admin-pulse { animation: pulse 2s ease-in-out infinite; }
+    @keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
+    .admin-pulse{animation:pulse 2s ease-in-out infinite}
 
-    .card { background: rgba(28,25,23,0.5); border: 1px solid rgba(255,255,255,0.05); border-radius: 1rem; transition: all 300ms; }
-    .card:hover { border-color: rgba(255,255,255,0.1); }
+    .card{background:rgba(28,25,23,.5);border:1px solid rgba(255,255,255,.05);border-radius:1rem;transition:all 300ms}
+    .card:hover{border-color:rgba(255,255,255,.1)}
+    .item-card{background:rgba(255,255,255,.02);border-radius:.75rem;padding:1rem;cursor:pointer;transition:all 300ms}
+    .item-card:hover{background:rgba(255,255,255,.05)}
 
-    .item-card { background: rgba(255,255,255,0.02); border-radius: 0.75rem; padding: 1rem; cursor: pointer; transition: all 300ms; }
-    .item-card:hover { background: rgba(255,255,255,0.05); }
+    /* Editor styles */
+    .editor-area{min-height:200px;max-height:400px;overflow-y:auto;outline:none;line-height:1.8}
+    .editor-area img{max-width:100%;border-radius:.5rem;margin:.5rem 0}
+    .toolbar-btn{width:36px;height:36px;border-radius:.5rem;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);color:#a8a29e;cursor:pointer;transition:all 200ms}
+    .toolbar-btn:hover{background:rgba(255,255,255,.1);color:#f5f5f4}
+
+    /* Blog content images */
+    .blog-content img{max-width:100%;border-radius:.5rem;margin:.75rem 0}
+    .blog-content a{color:#fde68a;text-decoration:underline;text-underline-offset:2px}
+    .blog-content a:hover{color:#fef3c7}
+    .blog-content p{margin-bottom:.5rem}
+    .blog-content b,.blog-content strong{color:#e7e5e4}
+
+    .link-btn{display:inline-flex;align-items:center;gap:4px;padding:4px 12px;border-radius:9999px;background:rgba(59,130,246,.15);color:#93c5fd;font-size:12px;font-weight:500;text-decoration:none;transition:all 200ms}
+    .link-btn:hover{background:rgba(59,130,246,.25);color:#bfdbfe}
   </style>
 </head>
 <body class="antialiased">
@@ -72,11 +72,9 @@
 <div class="cursor-glow hidden md:block" id="glow"></div>
 
 <!-- Toast -->
-<div id="toast" class="toast fixed bottom-8 left-1/2 -translate-x-1/2 z-[100] bg-stone-800 border border-stone-700 text-stone-100 px-6 py-3 rounded-2xl text-sm font-medium shadow-2xl">
-  <span id="toastMsg"></span>
-</div>
+<div id="toast" class="toast fixed bottom-8 left-1/2 -translate-x-1/2 z-[100] bg-stone-800 border border-stone-700 text-stone-100 px-6 py-3 rounded-2xl text-sm font-medium shadow-2xl"><span id="toastMsg"></span></div>
 
-<!-- Login Modal -->
+<!-- ========== LOGIN MODAL ========== -->
 <div id="loginModal" class="modal-bg fixed inset-0 z-[90] bg-black/70 backdrop-blur-md flex items-center justify-center">
   <div class="bg-stone-900 border border-stone-800 rounded-3xl p-8 w-full max-w-sm mx-4">
     <div class="text-center mb-6">
@@ -84,12 +82,72 @@
       <h3 class="font-serif text-2xl font-medium mt-3">管理员登录</h3>
       <p class="text-stone-500 text-sm mt-1">输入密码以进入编辑模式</p>
     </div>
-    <input id="pwdInput" type="password" placeholder="输入密码..." class="w-full px-5 py-3 bg-white/5 border border-white/10 rounded-xl text-stone-100 placeholder:text-stone-600 outline-none focus:border-amber-500/50 transition-colors text-center text-lg mb-4" onkeydown="if(event.key==='Enter')tryLogin()" />
+    <input id="pwdInput" type="password" placeholder="输入密码..." class="w-full px-5 py-3 bg-white/5 border border-white/10 rounded-xl text-stone-100 placeholder:text-stone-600 outline-none focus:border-amber-500/50 transition-colors text-center text-lg mb-4" onkeydown="if(event.key==='Enter')tryLogin()"/>
     <div class="flex gap-3">
       <button onclick="closeLogin()" class="flex-1 py-3 bg-white/5 border border-white/10 text-stone-400 rounded-xl hover:bg-white/10 transition-colors text-sm font-medium">取消</button>
       <button onclick="tryLogin()" class="flex-1 py-3 bg-stone-100 text-stone-950 rounded-xl hover:scale-105 transition-transform text-sm font-bold">登录</button>
     </div>
     <p id="loginErr" class="text-red-400 text-xs text-center mt-3 hidden">密码错误</p>
+  </div>
+</div>
+
+<!-- ========== BLOG EDITOR MODAL ========== -->
+<div id="editorModal" class="modal-bg fixed inset-0 z-[90] bg-black/70 backdrop-blur-md flex items-center justify-center p-4">
+  <div class="bg-stone-900 border border-stone-800 rounded-3xl p-6 md:p-8 w-full max-w-2xl max-h-[90vh] overflow-y-auto">
+    <div class="flex items-center justify-between mb-6">
+      <h3 class="font-serif text-2xl font-medium">✏️ 编辑文章</h3>
+      <button onclick="closeEditor()" class="w-9 h-9 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-stone-400 hover:text-stone-100 hover:bg-white/10 transition-all"><span class="iconify text-lg" data-icon="mdi:close"></span></button>
+    </div>
+
+    <!-- Title -->
+    <div class="mb-4">
+      <label class="text-xs uppercase tracking-widest text-stone-500 font-bold mb-2 block">标题</label>
+      <input id="editorTitle" type="text" class="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-stone-100 placeholder:text-stone-600 outline-none focus:border-amber-500/50 transition-colors text-lg font-serif" placeholder="输入标题..."/>
+    </div>
+
+    <!-- Toolbar -->
+    <div class="mb-2">
+      <label class="text-xs uppercase tracking-widest text-stone-500 font-bold mb-2 block">内容</label>
+      <div class="flex items-center gap-2 mb-2 flex-wrap">
+        <button class="toolbar-btn" onclick="editorCmd('bold')" title="加粗"><span class="iconify" data-icon="mdi:format-bold"></span></button>
+        <button class="toolbar-btn" onclick="editorCmd('italic')" title="斜体"><span class="iconify" data-icon="mdi:format-italic"></span></button>
+        <div class="w-px h-6 bg-white/10 mx-1"></div>
+        <button class="toolbar-btn" onclick="editorInsertLink()" title="插入链接"><span class="iconify" data-icon="mdi:link-variant"></span></button>
+        <button class="toolbar-btn" onclick="editorInsertImage()" title="上传图片"><span class="iconify" data-icon="mdi:image-plus"></span></button>
+      </div>
+      <div id="editorContent" contenteditable="true" class="editor-area w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-stone-300 font-light focus:border-amber-500/50 transition-colors" data-placeholder="在这里写内容..."></div>
+    </div>
+
+    <!-- External Link -->
+    <div class="mb-6">
+      <label class="text-xs uppercase tracking-widest text-stone-500 font-bold mb-2 block">外部链接（可选）</label>
+      <input id="editorLink" type="url" class="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-stone-100 placeholder:text-stone-600 outline-none focus:border-amber-500/50 transition-colors text-sm" placeholder="https://example.com"/>
+      <p class="text-stone-600 text-xs mt-1">填入后会在文章底部显示"查看链接"按钮</p>
+    </div>
+
+    <!-- Storage Warning -->
+    <div class="mb-6 p-3 rounded-xl bg-amber-500/10 border border-amber-500/20">
+      <p class="text-amber-400/80 text-xs">⚠️ 图片会保存在浏览器中，总容量约5MB。建议单张图片不超过500KB，总计不超过15张图片。</p>
+      <p class="text-stone-500 text-xs mt-1">已使用：<span id="storageUsage">0</span> KB</p>
+    </div>
+
+    <!-- Buttons -->
+    <div class="flex gap-3">
+      <button onclick="closeEditor()" class="flex-1 py-3 bg-white/5 border border-white/10 text-stone-400 rounded-xl hover:bg-white/10 transition-colors text-sm font-medium">取消</button>
+      <button onclick="saveEditor()" class="flex-1 py-3 bg-stone-100 text-stone-950 rounded-xl hover:scale-105 transition-transform text-sm font-bold">保存文章</button>
+    </div>
+  </div>
+</div>
+
+<!-- ========== LINK INPUT MODAL ========== -->
+<div id="linkModal" class="modal-bg fixed inset-0 z-[95] bg-black/50 flex items-center justify-center p-4">
+  <div class="bg-stone-900 border border-stone-800 rounded-2xl p-6 w-full max-w-sm">
+    <h4 class="font-medium mb-3">插入链接</h4>
+    <input id="linkUrlInput" type="url" placeholder="https://..." class="w-full px-4 py-2 bg-white/5 border border-white/10 rounded-lg text-stone-100 placeholder:text-stone-600 outline-none focus:border-amber-500/50 text-sm mb-3"/>
+    <div class="flex gap-2">
+      <button onclick="closeLinkModal()" class="flex-1 py-2 bg-white/5 text-stone-400 rounded-lg text-sm hover:bg-white/10 transition-colors">取消</button>
+      <button onclick="confirmLink()" class="flex-1 py-2 bg-blue-500/80 text-white rounded-lg text-sm hover:bg-blue-500 transition-colors">确定</button>
+    </div>
   </div>
 </div>
 
@@ -115,14 +173,14 @@
 <!-- ========== HERO ========== -->
 <section class="relative min-h-screen flex items-center justify-center overflow-hidden">
   <div class="absolute inset-0">
-    <!-- 🔽 背景图片：替换 src 为你自己的图片路径 🔽 -->
-    <img src="background.png" />
+    <!-- 🔽👇 背景图片：改成你自己的图片文件名 🔽👇 -->
+    <img src="https://z-cdn-media.chatglm.cn/files/d6e06fb4-de05-4bd7-b96c-a21ebab7d32d.png?auth_key=1879711014-670401e5f6014c9c8cfd002029d8620e-0-37cbca62e67a0978c401554640e0f9f1" alt="" class="w-full h-full object-cover"/>
     <div class="absolute inset-0 bg-gradient-to-b from-stone-950/50 via-stone-950/70 to-stone-950"></div>
   </div>
   <div class="relative z-10 max-w-3xl mx-auto px-6 text-center pt-16">
     <div class="w-28 h-28 mx-auto mb-8 rounded-full overflow-hidden border-2 border-amber-500/30 shadow-xl shadow-amber-500/10">
-      <!-- 🔽 头像图片：替换 src 为你自己的图片路径 🔽 -->
-      <img src="head.jpg" />
+      <!-- 🔽👇 头像图片：改成你自己的图片文件名 🔽👇 -->
+      <img src="https://z-cdn-media.chatglm.cn/files/d6e06fb4-de05-4bd7-b96c-a21ebab7d32d.png?auth_key=1879711014-670401e5f6014c9c8cfd002029d8620e-0-37cbca62e67a0978c401554640e0f9f1" alt="" class="w-full h-full object-cover"/>
     </div>
     <h1 class="font-serif text-5xl md:text-7xl font-normal leading-[0.85] tracking-tighter mb-6">
       <span class="shimmer" id="heroName" data-key="name">猫娘</span>
@@ -169,6 +227,24 @@
   </div>
 </section>
 
+<!-- ========== BLOG POSTS ========== -->
+<section class="py-10 px-6">
+  <div class="max-w-3xl mx-auto reveal">
+    <div class="flex items-center gap-3 mb-6">
+      <span class="text-2xl">📝</span>
+      <h2 class="font-serif text-2xl font-medium">博客文章</h2>
+      <button id="addPostBtn" class="hidden ml-auto w-8 h-8 rounded-lg bg-amber-500/20 text-amber-400 items-center justify-center hover:bg-amber-500/30 transition-colors" onclick="openEditor()">
+        <span class="iconify" data-icon="mdi:plus"></span>
+      </button>
+    </div>
+    <div class="space-y-4" id="postsBox"></div>
+    <div id="noPosts" class="hidden text-center py-12 text-stone-600">
+      <span class="text-4xl block mb-3">📄</span>
+      <p>还没有文章，点击右上角 + 开始创作吧</p>
+    </div>
+  </div>
+</section>
+
 <!-- ========== COLUMNS ========== -->
 <section class="py-10 pb-24 px-6">
   <div class="max-w-3xl mx-auto reveal">
@@ -178,82 +254,103 @@
 
 <!-- ========== FOOTER ========== -->
 <footer class="border-t border-white/5 py-8 px-6">
-  <div class="max-w-3xl mx-auto text-center">
+  <div class="max-w-3xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
     <p class="text-stone-600 text-xs">© 2024 我的小世界 · 用 🐾 和爱构建</p>
+    <div id="adminFooterBtns" class="hidden items-center gap-3">
+      <button onclick="exportData()" class="text-stone-500 hover:text-stone-300 text-xs transition-colors flex items-center gap-1"><span class="iconify" data-icon="mdi:download"></span> 导出数据</button>
+      <span class="text-stone-700 text-xs">|</span>
+      <button onclick="importDataClick()" class="text-stone-500 hover:text-stone-300 text-xs transition-colors flex items-center gap-1"><span class="iconify" data-icon="mdi:upload"></span> 导入数据</button>
+      <input id="importFileInput" type="file" accept=".json" class="hidden" onchange="importData(event)"/>
+    </div>
   </div>
 </footer>
 
 <script>
 // ==================== CONFIG ====================
-const ADMIN_PASSWORD = 'maonv'; // ← 修改你的管理员密码
+const ADMIN_PASSWORD = 'maonv';
 const SAVE_KEY = 'myBlogData';
 
 // ==================== DEFAULT DATA ====================
 const DEFAULTS = {
-  name: 'Double D',
-  signature: '猫娘征服世界！',
-  bio: '在这里记录灵感、想法和一切有趣的事物。欢迎来到我的小世界 ✨',
-  aboutTitle: '关于我',
-  aboutContent: '<p>你好呀！我是一个喜欢创造和思考的人。</p><p>平时喜欢画画、写代码、看漫画，偶尔也会发呆想一些乱七八糟的事情。这个博客是我的秘密基地，用来记录脑子里的各种想法。</p><p>如果你也有有趣的灵感，欢迎交流 🐾</p>',
-  thoughts: [
-    { id: 1, title: '为什么猫咪总是那么淡定？', content: '因为它们知道，这个世界终将属于自己。人慌慌张张地活着，猫却悠然自得地俯视一切。也许我们都该学学猫的哲学。', date: '2024.12.15', open: false },
-    { id: 2, title: '深夜写代码的仪式感', content: '泡一杯热可可，戴上耳机放点轻音乐，然后让手指在键盘上跳舞。这大概就是我理解的幸福——在安静的黑夜里，用代码创造一些什么。', date: '2024.12.10', open: false },
-    { id: 3, title: '关于「完美主义」这件事', content: '追求完美本身没有错，错的是让完美成为不开始的理由。先完成，再完美。这句话我对自己说了无数遍，希望这次能真正记住。', date: '2024.12.05', open: false },
+  name:'猫娘',
+  signature:'猫娘征服世界！',
+  bio:'在这里记录灵感、想法和一切有趣的事物。欢迎来到我的小世界 ✨',
+  aboutTitle:'关于我',
+  aboutContent:'<p>你好呀！我是一个喜欢创造和思考的人。</p><p>平时喜欢画画、写代码、看漫画，偶尔也会发呆想一些乱七八糟的事情。这个博客是我的秘密基地，用来记录脑子里的各种想法。</p><p>如果你也有有趣的灵感，欢迎交流 🐾</p>',
+  thoughts:[
+    {id:1,title:'为什么猫咪总是那么淡定？',content:'因为它们知道，这个世界终将属于自己。人慌慌张张地活着，猫却悠然自得地俯视一切。也许我们都该学学猫的哲学。',date:'2024.12.15',link:'',open:false},
+    {id:2,title:'深夜写代码的仪式感',content:'泡一杯热可可，戴上耳机放点轻音乐，然后让手指在键盘上跳舞。这大概就是我理解的幸福——在安静的黑夜里，用代码创造一些什么。',date:'2024.12.10',link:'',open:false},
+    {id:3,title:'关于「完美主义」这件事',content:'追求完美本身没有错，错的是让完美成为不开始的理由。先完成，再完美。这句话我对自己说了无数遍，希望这次能真正记住。',date:'2024.12.05',link:'',open:false},
   ],
-  columns: [
-    { id: 'col1', title: '📝 灵感收集', open: false, items: [
-      { title: '如果城市会说话', content: '想象一下，如果每座城市都有自己的声音。东京是电子合成器的嗡鸣，巴黎是手风琴的悠扬，而我的城市是……键盘的敲击声。', date: '2024.12.12', open: false },
-      { title: '颜色与情绪的实验', content: '今天试着用不同颜色搭配来写代码界面，发现暖色调让人更放松，冷色调让人更专注。也许我应该根据心情来选择配色方案。', date: '2024.12.08', open: false },
-      { title: '窗台上的小花', content: '那盆快要枯萎的多肉，在我连续浇水三天后居然活了过来。生命力的顽强让人感动，也让我相信：有些事情，再坚持一下就好。', date: '2024.12.01', open: false },
+  posts:[
+    {id:101,title:'欢迎来到我的小世界',content:'<p>这是我的第一篇博客文章 🎉</p><p>在这里我会分享我的想法、灵感和日常。希望能和你一起探索这个有趣的世界！</p>',date:'2024.12.15',link:'',open:false},
+  ],
+  columns:[
+    {id:'col1',title:'📝 灵感收集',open:false,items:[
+      {title:'如果城市会说话',content:'想象一下，如果每座城市都有自己的声音。东京是电子合成器的嗡鸣，巴黎是手风琴的悠扬，而我的城市是……键盘的敲击声。',date:'2024.12.12',link:'',open:false},
+      {title:'颜色与情绪的实验',content:'今天试着用不同颜色搭配来写代码界面，发现暖色调让人更放松，冷色调让人更专注。',date:'2024.12.08',link:'',open:false},
     ]},
-    { id: 'col2', title: '📚 学习笔记', open: false, items: [
-      { title: 'CSS 动画性能优化', content: '使用 transform 和 opacity 做动画，避免触发 layout 和 paint。will-change 属性要慎用，只在需要时加上，动画结束后移除。', date: '2024.12.14', open: false },
-      { title: 'JavaScript 闭包理解', content: '闭包 = 函数 + 它能访问的外部变量。就像一个背包，函数走到哪都背着它需要的东西。最经典的应用：模块模式和柯里化。', date: '2024.12.09', open: false },
-      { title: '设计中的留白艺术', content: '留白不是空白，是呼吸。好的设计让眼睛有地方休息，让信息有层次感。少即是多，但少不等于简陋。', date: '2024.12.03', open: false },
+    {id:'col2',title:'📚 学习笔记',open:false,items:[
+      {title:'CSS 动画性能优化',content:'使用 transform 和 opacity 做动画，避免触发 layout 和 paint。will-change 属性要慎用。',date:'2024.12.14',link:'',open:false},
+      {title:'JavaScript 闭包理解',content:'闭包 = 函数 + 它能访问的外部变量。就像一个背包，函数走到哪都背着它需要的东西。',date:'2024.12.09',link:'',open:false},
     ]},
   ]
 };
 
 // ==================== STATE ====================
-let isAdmin = false;
-let logoCount = 0;
-let logoTimer = null;
-let data = {};
+let isAdmin=false, logoCount=0, logoTimer=null, data={}, editingPostId=null;
 
 // ==================== DATA ====================
-function load() {
-  try {
-    const s = localStorage.getItem(SAVE_KEY);
-    data = s ? { ...DEFAULTS, ...JSON.parse(s) } : JSON.parse(JSON.stringify(DEFAULTS));
-  } catch { data = JSON.parse(JSON.stringify(DEFAULTS)); }
+function load(){
+  try{const s=localStorage.getItem(SAVE_KEY);data=s?{...DEFAULTS,...JSON.parse(s)}:JSON.parse(JSON.stringify(DEFAULTS));}
+  catch{data=JSON.parse(JSON.stringify(DEFAULTS));}
+  // Ensure posts array exists
+  if(!data.posts)data.posts=[];
 }
-function save() { localStorage.setItem(SAVE_KEY, JSON.stringify(data)); }
+function save(){localStorage.setItem(SAVE_KEY,JSON.stringify(data));}
+
+// ==================== IMAGE UTILITIES ====================
+function compressImage(file,maxW,quality,cb){
+  const reader=new FileReader();
+  reader.onload=e=>{
+    const img=new Image();
+    img.onload=()=>{
+      const c=document.createElement('canvas');
+      let w=img.width,h=img.height;
+      if(w>maxW){h=h*maxW/w;w=maxW;}
+      c.width=w;c.height=h;
+      c.getContext('2d').drawImage(img,0,0,w,h);
+      cb(c.toDataURL('image/jpeg',quality));
+    };
+    img.src=e.target.result;
+  };
+  reader.readAsDataURL(file);
+}
+
+function getStorageSize(){
+  const s=localStorage.getItem(SAVE_KEY)||'';
+  return Math.round(new Blob([s]).size/1024);
+}
 
 // ==================== RENDER ====================
-function render() {
-  // Hero
-  document.getElementById('heroName').textContent = data.name;
-  document.getElementById('heroSig').textContent = data.signature;
-  document.getElementById('heroBio').textContent = data.bio;
-  // About
-  document.getElementById('aboutTitle').textContent = data.aboutTitle;
-  document.getElementById('aboutContent').innerHTML = data.aboutContent;
-  // Thoughts & Columns
-  renderThoughts();
-  renderColumns();
-  // Admin UI
-  updateAdmin();
+function render(){
+  document.getElementById('heroName').textContent=data.name;
+  document.getElementById('heroSig').textContent=data.signature;
+  document.getElementById('heroBio').textContent=data.bio;
+  document.getElementById('aboutTitle').textContent=data.aboutTitle;
+  document.getElementById('aboutContent').innerHTML=data.aboutContent;
+  renderThoughts();renderPosts();renderColumns();updateAdmin();
 }
 
-function renderThoughts() {
-  const box = document.getElementById('thoughtsBox');
-  box.innerHTML = data.thoughts.map(t => `
-    <div class="card overflow-hidden">
+function renderThoughts(){
+  const box=document.getElementById('thoughtsBox');
+  box.innerHTML=data.thoughts.map(t=>`
+    <div class="card overflow-hidden" id="thought-${t.id}">
       <div class="flex items-center justify-between p-5 cursor-pointer select-none" onclick="toggleThought(${t.id})">
         <div class="flex-1 min-w-0">
           <div class="flex items-center gap-2">
-            <h3 class="font-medium text-stone-200 truncate">${t.title}</h3>
-            ${isAdmin ? `<button class="shrink-0 w-6 h-6 rounded bg-red-500/20 text-red-400 flex items-center justify-center hover:bg-red-500/30 transition-colors" onclick="event.stopPropagation();delThought(${t.id})" title="删除"><span class="iconify text-sm" data-icon="mdi:close"></span></button>` : ''}
+            <h3 class="font-medium text-stone-200 truncate ${isAdmin?'editable-title':''}" ${isAdmin?`contenteditable="true" onclick="event.stopPropagation()" onblur="editThoughtTitle(${t.id},this.textContent)"`:''}  >${t.title}</h3>
+            ${isAdmin?`<button class="shrink-0 w-6 h-6 rounded bg-red-500/20 text-red-400 flex items-center justify-center hover:bg-red-500/30 transition-colors" onclick="event.stopPropagation();delThought(${t.id})" title="删除"><span class="iconify text-sm" data-icon="mdi:close"></span></button>`:''}
           </div>
           <span class="text-stone-600 text-xs">${t.date}</span>
         </div>
@@ -262,28 +359,60 @@ function renderThoughts() {
       <div class="expandable ${t.open?'open':''}">
         <div class="px-5 pb-5">
           <div class="border-t border-white/5 pt-4 text-stone-400 font-light leading-relaxed" ${isAdmin?`contenteditable="true" onblur="editThoughtContent(${t.id},this.innerText)"`:''}>${t.content}</div>
+          ${t.link?`<a href="${t.link}" target="_blank" rel="noopener" class="link-btn mt-3 inline-flex" onclick="event.stopPropagation()"><span class="iconify text-sm" data-icon="mdi:open-in-new"></span> 查看链接</a>`:''}
         </div>
       </div>
     </div>
   `).join('');
 }
 
-function renderColumns() {
-  const box = document.getElementById('columnsBox');
-  box.innerHTML = data.columns.map(col => `
+function renderPosts(){
+  const box=document.getElementById('postsBox');
+  const noP=document.getElementById('noPosts');
+  if(!data.posts.length){box.innerHTML='';noP.classList.remove('hidden');return;}
+  noP.classList.add('hidden');
+  box.innerHTML=data.posts.map(p=>`
+    <div class="card overflow-hidden" id="post-${p.id}">
+      <div class="flex items-center justify-between p-5 cursor-pointer select-none" onclick="togglePost(${p.id})">
+        <div class="flex-1 min-w-0">
+          <div class="flex items-center gap-2">
+            <h3 class="font-serif text-xl font-medium text-stone-200 truncate ${isAdmin?'editable-title':''}" ${isAdmin?`contenteditable="true" onclick="event.stopPropagation()" onblur="editPostTitle(${p.id},this.textContent)"`:''}>${p.title}</h3>
+            ${isAdmin?`
+              <button class="shrink-0 w-6 h-6 rounded bg-blue-500/20 text-blue-400 flex items-center justify-center hover:bg-blue-500/30 transition-colors" onclick="event.stopPropagation();openEditor(${p.id})" title="编辑"><span class="iconify text-sm" data-icon="mdi:pencil"></span></button>
+              <button class="shrink-0 w-6 h-6 rounded bg-red-500/20 text-red-400 flex items-center justify-center hover:bg-red-500/30 transition-colors" onclick="event.stopPropagation();delPost(${p.id})" title="删除"><span class="iconify text-sm" data-icon="mdi:close"></span></button>
+            `:''}
+          </div>
+          <span class="text-stone-600 text-xs">${p.date}</span>
+        </div>
+        <span class="iconify arrow text-stone-500 text-xl ml-3 ${p.open?'rotated':''}" data-icon="mdi:chevron-down"></span>
+      </div>
+      <div class="expandable ${p.open?'open':''}">
+        <div class="px-5 pb-5">
+          <div class="border-t border-white/5 pt-4 text-stone-400 font-light leading-relaxed blog-content">${p.content}</div>
+          ${p.link?`<a href="${p.link}" target="_blank" rel="noopener" class="link-btn mt-3 inline-flex" onclick="event.stopPropagation()"><span class="iconify text-sm" data-icon="mdi:open-in-new"></span> 查看链接</a>`:''}
+          ${isAdmin?`<div class="mt-3 pt-3 border-t border-white/5 flex items-center gap-2"><span class="text-stone-600 text-xs">分享链接：</span><code class="text-xs text-stone-500 bg-white/5 px-2 py-1 rounded select-all">${location.origin}${location.pathname}#post-${p.id}</code></div>`:''}
+        </div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function renderColumns(){
+  const box=document.getElementById('columnsBox');
+  box.innerHTML=data.columns.map(col=>`
     <div class="card overflow-hidden">
       <div class="flex items-center justify-between p-5 cursor-pointer select-none" onclick="toggleCol('${col.id}')">
-        <h3 class="font-serif text-xl font-medium">${col.title}</h3>
+        <h3 class="font-serif text-xl font-medium ${isAdmin?'editable-title':''}" ${isAdmin?`contenteditable="true" onclick="event.stopPropagation()" onblur="editColTitle('${col.id}',this.textContent)"`:''}>${col.title}</h3>
         <span class="iconify arrow text-stone-500 text-xl ${col.open?'rotated':''}" data-icon="mdi:chevron-down"></span>
       </div>
       <div class="expandable ${col.open?'open':''}">
         <div class="px-5 pb-5 space-y-3">
-          ${col.items.map((it,i) => `
+          ${col.items.map((it,i)=>`
             <div class="item-card" onclick="toggleColItem('${col.id}',${i})">
               <div class="flex items-center justify-between">
                 <div class="flex-1 min-w-0">
                   <div class="flex items-center gap-2">
-                    <h4 class="text-sm font-medium text-stone-200 truncate">${it.title}</h4>
+                    <h4 class="text-sm font-medium text-stone-200 truncate ${isAdmin?'editable-title':''}" ${isAdmin?`contenteditable="true" onclick="event.stopPropagation()" onblur="editColItemTitle('${col.id}',${i},this.textContent)"`:''}>${it.title}</h4>
                     ${isAdmin?`<button class="shrink-0 w-5 h-5 rounded bg-red-500/20 text-red-400 flex items-center justify-center hover:bg-red-500/30 transition-colors" style="font-size:10px" onclick="event.stopPropagation();delColItem('${col.id}',${i})" title="删除"><span class="iconify" data-icon="mdi:close"></span></button>`:''}
                   </div>
                   <span class="text-stone-600 text-xs">${it.date}</span>
@@ -291,7 +420,8 @@ function renderColumns() {
                 <span class="iconify arrow text-stone-600 text-lg ml-2 ${it.open?'rotated':''}" data-icon="mdi:chevron-down"></span>
               </div>
               <div class="expandable ${it.open?'open':''}">
-                <div class="mt-3 pt-3 border-t border-white/5 text-stone-400 text-sm font-light leading-relaxed" ${isAdmin?`contenteditable="true" onblur="editColItemContent('${col.id}',${i},this.innerText)"`:''}>${it.content}</div>
+                <div class="mt-3 pt-3 border-t border-white/5 text-stone-400 text-sm font-light leading-relaxed blog-content" ${isAdmin?`contenteditable="true" onblur="editColItemContent('${col.id}',${i},this.innerText)"`:''}>${it.content}</div>
+                ${it.link?`<a href="${it.link}" target="_blank" rel="noopener" class="link-btn mt-2 inline-flex" onclick="event.stopPropagation()"><span class="iconify text-sm" data-icon="mdi:open-in-new"></span> 查看链接</a>`:''}
               </div>
             </div>
           `).join('')}
@@ -303,139 +433,219 @@ function renderColumns() {
 }
 
 // ==================== TOGGLE ====================
-function toggleThought(id) {
-  const t = data.thoughts.find(x=>x.id===id); if(!t) return;
-  t.open = !t.open; save(); renderThoughts();
+function toggleThought(id){const t=data.thoughts.find(x=>x.id===id);if(!t)return;t.open=!t.open;save();renderThoughts();}
+function togglePost(id){const p=data.posts.find(x=>x.id===id);if(!p)return;p.open=!p.open;save();renderPosts();if(p.open)history.replaceState(null,'',`#post-${id}`);}
+function toggleCol(cid){const c=data.columns.find(x=>x.id===cid);if(!c)return;c.open=!c.open;save();renderColumns();}
+function toggleColItem(cid,i){const c=data.columns.find(x=>x.id===cid);if(!c||!c.items[i])return;c.items[i].open=!c.items[i].open;save();renderColumns();}
+
+// ==================== INLINE EDIT ====================
+function editThoughtTitle(id,v){const t=data.thoughts.find(x=>x.id===id);if(t){t.title=v.trim()||'无标题';save();toast('标题已保存 ✅');}}
+function editThoughtContent(id,v){const t=data.thoughts.find(x=>x.id===id);if(t){t.content=v;save();toast('已保存 ✅');}}
+function editPostTitle(id,v){const p=data.posts.find(x=>x.id===id);if(p){p.title=v.trim()||'无标题';save();toast('标题已保存 ✅');}}
+function editColTitle(cid,v){const c=data.columns.find(x=>x.id===cid);if(c){c.title=v.trim()||'无标题';save();toast('标题已保存 ✅');}}
+function editColItemTitle(cid,i,v){const c=data.columns.find(x=>x.id===cid);if(c&&c.items[i]){c.items[i].title=v.trim()||'无标题';save();toast('标题已保存 ✅');}}
+function editColItemContent(cid,i,v){const c=data.columns.find(x=>x.id===cid);if(c&&c.items[i]){c.items[i].content=v;save();toast('已保存 ✅');}}
+
+// ==================== ADD / DELETE ====================
+function addThought(){
+  data.thoughts.unshift({id:Date.now(),title:'新的想法',content:'在这里写下你的想法...',date:today(),link:'',open:true});
+  save();renderThoughts();toast('已添加 ✨');
 }
-function toggleCol(cid) {
-  const c = data.columns.find(x=>x.id===cid); if(!c) return;
-  c.open = !c.open; save(); renderColumns();
+function delThought(id){data.thoughts=data.thoughts.filter(x=>x.id!==id);save();renderThoughts();toast('已删除');}
+function delPost(id){data.posts=data.posts.filter(x=>x.id!==id);save();renderPosts();toast('已删除');}
+function addColItem(cid){
+  const c=data.columns.find(x=>x.id===cid);if(!c)return;
+  c.items.unshift({title:'新条目',content:'在这里写内容...',date:today(),link:'',open:true});
+  c.open=true;save();renderColumns();toast('已添加 ✨');
 }
-function toggleColItem(cid,i) {
-  const c = data.columns.find(x=>x.id===cid); if(!c||!c.items[i]) return;
-  c.items[i].open = !c.items[i].open; save(); renderColumns();
+function delColItem(cid,i){const c=data.columns.find(x=>x.id===cid);if(!c)return;c.items.splice(i,1);save();renderColumns();toast('已删除');}
+function today(){return new Date().toISOString().slice(0,10).replace(/-/g,'.');}
+
+// ==================== BLOG EDITOR ====================
+function openEditor(postId){
+  if(!isAdmin)return;
+  editingPostId=postId||null;
+  const modal=document.getElementById('editorModal');
+  if(postId){
+    const p=data.posts.find(x=>x.id===postId);
+    if(!p)return;
+    document.getElementById('editorTitle').value=p.title;
+    document.getElementById('editorContent').innerHTML=p.content;
+    document.getElementById('editorLink').value=p.link||'';
+  }else{
+    document.getElementById('editorTitle').value='';
+    document.getElementById('editorContent').innerHTML='<p><br></p>';
+    document.getElementById('editorLink').value='';
+  }
+  document.getElementById('storageUsage').textContent=getStorageSize();
+  modal.classList.add('open');
+  setTimeout(()=>document.getElementById('editorTitle').focus(),200);
+}
+function closeEditor(){document.getElementById('editorModal').classList.remove('open');editingPostId=null;}
+
+function saveEditor(){
+  const title=document.getElementById('editorTitle').value.trim()||'无标题';
+  const content=document.getElementById('editorContent').innerHTML;
+  const link=document.getElementById('editorLink').value.trim();
+
+  // Check storage
+  const size=getStorageSize();
+  if(size>4500){toast('⚠️ 存储空间不足！请删除一些图片或文章');return;}
+
+  if(editingPostId){
+    const p=data.posts.find(x=>x.id===editingPostId);
+    if(p){p.title=title;p.content=content;p.link=link;save();renderPosts();toast('文章已更新 ✅');}
+  }else{
+    data.posts.unshift({id:Date.now(),title,content,date:today(),link,open:true});
+    save();renderPosts();toast('文章已发布 🎉');
+  }
+  closeEditor();
 }
 
-// ==================== ADMIN EDIT ====================
-function editThoughtContent(id,text) {
-  const t = data.thoughts.find(x=>x.id===id); if(t){t.content=text;save();toast('已保存 ✅');}
+// Toolbar commands
+function editorCmd(cmd){document.execCommand(cmd,false,null);document.getElementById('editorContent').focus();}
+
+function editorInsertLink(){
+  document.getElementById('linkUrlInput').value='';
+  document.getElementById('linkModal').classList.add('open');
+  setTimeout(()=>document.getElementById('linkUrlInput').focus(),200);
 }
-function editColItemContent(cid,i,text) {
-  const c = data.columns.find(x=>x.id===cid); if(c&&c.items[i]){c.items[i].content=text;save();toast('已保存 ✅');}
+function closeLinkModal(){document.getElementById('linkModal').classList.remove('open');}
+function confirmLink(){
+  const url=document.getElementById('linkUrlInput').value.trim();
+  if(url){document.getElementById('editorContent').focus();document.execCommand('createLink',false,url);}
+  closeLinkModal();
 }
 
-// ==================== ADMIN ADD/DEL ====================
-function addThought() {
-  data.thoughts.unshift({ id:Date.now(), title:'新的想法', content:'在这里写下你的想法...', date:today(), open:true });
-  save(); renderThoughts(); toast('已添加新想法 ✨');
+function editorInsertImage(){
+  const input=document.createElement('input');
+  input.type='file';input.accept='image/*';
+  input.onchange=e=>{
+    const file=e.target.files[0];if(!file)return;
+    toast('正在压缩图片...');
+    compressImage(file,800,0.7,base64=>{
+      document.getElementById('editorContent').focus();
+      document.execCommand('insertImage',false,base64);
+      document.getElementById('storageUsage').textContent=getStorageSize();
+      toast('图片已插入 🖼️');
+    });
+  };
+  input.click();
 }
-function delThought(id) {
-  data.thoughts = data.thoughts.filter(x=>x.id!==id);
-  save(); renderThoughts(); toast('已删除');
-}
-function addColItem(cid) {
-  const c = data.columns.find(x=>x.id===cid); if(!c) return;
-  c.items.unshift({ title:'新条目', content:'在这里写内容...', date:today(), open:true });
-  c.open = true; save(); renderColumns(); toast('已添加 ✨');
-}
-function delColItem(cid,i) {
-  const c = data.columns.find(x=>x.id===cid); if(!c) return;
-  c.items.splice(i,1); save(); renderColumns(); toast('已删除');
-}
-
-function today() { return new Date().toISOString().slice(0,10).replace(/-/g,'.'); }
 
 // ==================== ADMIN MODE ====================
-function toggleAdmin() { isAdmin ? logoutAdmin() : openLogin(); }
-
-function openLogin() {
+function toggleAdmin(){isAdmin?logoutAdmin():openLogin();}
+function openLogin(){
   document.getElementById('loginModal').classList.add('open');
-  document.getElementById('pwdInput').value = '';
+  document.getElementById('pwdInput').value='';
   document.getElementById('loginErr').classList.add('hidden');
   setTimeout(()=>document.getElementById('pwdInput').focus(),200);
 }
-function closeLogin() { document.getElementById('loginModal').classList.remove('open'); }
-
-function tryLogin() {
-  if (document.getElementById('pwdInput').value === ADMIN_PASSWORD) {
-    isAdmin = true; closeLogin(); render(); toast('欢迎回来，管理员 🐱');
-  } else {
-    document.getElementById('loginErr').classList.remove('hidden');
-  }
+function closeLogin(){document.getElementById('loginModal').classList.remove('open');}
+function tryLogin(){
+  if(document.getElementById('pwdInput').value===ADMIN_PASSWORD){
+    isAdmin=true;closeLogin();render();toast('欢迎回来，管理员 🐱');
+  }else{document.getElementById('loginErr').classList.remove('hidden');}
 }
-function logoutAdmin() { isAdmin = false; render(); toast('已退出编辑模式'); }
+function logoutAdmin(){isAdmin=false;render();toast('已退出编辑模式');}
 
-function updateAdmin() {
-  const badge = document.getElementById('adminBadge');
-  const addBtn = document.getElementById('addThoughtBtn');
-  const btn = document.getElementById('adminBtn');
+function updateAdmin(){
+  const badge=document.getElementById('adminBadge');
+  const addT=document.getElementById('addThoughtBtn');
+  const addP=document.getElementById('addPostBtn');
+  const footerBtns=document.getElementById('adminFooterBtns');
+  const btn=document.getElementById('adminBtn');
 
-  if (isAdmin) {
-    badge.classList.remove('hidden'); badge.classList.add('flex');
-    addBtn.classList.remove('hidden'); addBtn.classList.add('flex');
+  if(isAdmin){
+    badge.classList.remove('hidden');badge.classList.add('flex');
+    addT.classList.remove('hidden');addT.classList.add('flex');
+    addP.classList.remove('hidden');addP.classList.add('flex');
+    footerBtns.classList.remove('hidden');footerBtns.classList.add('flex');
     btn.classList.add('!bg-amber-500/20','!border-amber-500/30','!text-amber-400');
     btn.querySelector('.iconify').setAttribute('data-icon','mdi:shield-lock');
-
-    // Make hero & about editable
-    ['heroName','heroSig','heroBio','aboutTitle'].forEach(id => {
-      const el = document.getElementById(id);
-      el.contentEditable = 'true';
-      el.onblur = function(){ data[this.dataset.key]=this.textContent; save(); toast('已保存 ✅'); };
+    ['heroName','heroSig','heroBio','aboutTitle'].forEach(id=>{
+      const el=document.getElementById(id);
+      el.contentEditable='true';
+      el.onblur=function(){data[this.dataset.key]=this.textContent;save();toast('已保存 ✅');};
     });
-    const ac = document.getElementById('aboutContent');
-    ac.contentEditable = 'true';
-    ac.onblur = function(){ data.aboutContent=this.innerHTML; save(); toast('已保存 ✅'); };
-  } else {
-    badge.classList.add('hidden'); badge.classList.remove('flex');
-    addBtn.classList.add('hidden'); addBtn.classList.remove('flex');
+    const ac=document.getElementById('aboutContent');
+    ac.contentEditable='true';
+    ac.onblur=function(){data.aboutContent=this.innerHTML;save();toast('已保存 ✅');};
+  }else{
+    badge.classList.add('hidden');badge.classList.remove('flex');
+    addT.classList.add('hidden');addT.classList.remove('flex');
+    addP.classList.add('hidden');addP.classList.remove('flex');
+    footerBtns.classList.add('hidden');footerBtns.classList.remove('flex');
     btn.classList.remove('!bg-amber-500/20','!border-amber-500/30','!text-amber-400');
     btn.querySelector('.iconify').setAttribute('data-icon','mdi:shield-lock-outline');
-
-    ['heroName','heroSig','heroBio','aboutTitle','aboutContent'].forEach(id => {
-      const el = document.getElementById(id);
-      el.contentEditable = 'false'; el.onblur = null;
+    ['heroName','heroSig','heroBio','aboutTitle','aboutContent'].forEach(id=>{
+      const el=document.getElementById(id);el.contentEditable='false';el.onblur=null;
     });
   }
 }
 
-// Logo triple-click shortcut
-function logoClick() {
-  logoCount++;
-  clearTimeout(logoTimer);
-  logoTimer = setTimeout(()=>{logoCount=0;},600);
-  if (logoCount >= 3) { logoCount=0; toggleAdmin(); }
+// Logo triple-click
+function logoClick(){
+  logoCount++;clearTimeout(logoTimer);
+  logoTimer=setTimeout(()=>{logoCount=0;},600);
+  if(logoCount>=3){logoCount=0;toggleAdmin();}
+}
+
+// ==================== EXPORT / IMPORT ====================
+function exportData(){
+  const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);
+  a.download='my-blog-data.json';
+  a.click();toast('数据已导出 📁');
+}
+function importDataClick(){document.getElementById('importFileInput').click();}
+function importData(e){
+  const file=e.target.files[0];if(!file)return;
+  const reader=new FileReader();
+  reader.onload=ev=>{
+    try{
+      const imported=JSON.parse(ev.target.result);
+      data={...DEFAULTS,...imported};
+      save();render();toast('数据已导入 ✅');
+    }catch{toast('导入失败：文件格式错误 ❌');}
+  };
+  reader.readAsText(file);
+  e.target.value='';
+}
+
+// ==================== HASH NAVIGATION ====================
+function handleHash(){
+  const h=location.hash;
+  if(h.startsWith('#post-')){
+    const id=parseInt(h.slice(6));
+    const p=data.posts.find(x=>x.id===id);
+    if(p){p.open=true;save();renderPosts();
+      setTimeout(()=>{document.getElementById('post-'+id)?.scrollIntoView({behavior:'smooth'});},300);
+    }
+  }
 }
 
 // ==================== UTILITIES ====================
-// Cursor glow
-const glow = document.getElementById('glow');
-document.addEventListener('mousemove', e => { glow.style.left=e.clientX+'px'; glow.style.top=e.clientY+'px'; });
+const glow=document.getElementById('glow');
+document.addEventListener('mousemove',e=>{glow.style.left=e.clientX+'px';glow.style.top=e.clientY+'px';});
 
-// Scroll reveal
-const obs = new IntersectionObserver(entries => {
-  entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('active'); });
-}, {threshold:0.1});
-document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+const obs=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('active');});},{threshold:0.1});
+document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
 
-// Toast
 let toastT;
-function toast(msg) {
-  const t = document.getElementById('toast');
-  document.getElementById('toastMsg').textContent = msg;
-  t.classList.add('show');
-  clearTimeout(toastT);
-  toastT = setTimeout(()=>t.classList.remove('show'),2000);
-}
+function toast(msg){const t=document.getElementById('toast');document.getElementById('toastMsg').textContent=msg;t.classList.add('show');clearTimeout(toastT);toastT=setTimeout(()=>t.classList.remove('show'),2000);}
 
-// Keyboard shortcuts
-document.addEventListener('keydown', e => {
-  if(e.ctrlKey && e.shiftKey && e.key==='A'){ e.preventDefault(); toggleAdmin(); }
-  if(e.key==='Escape') closeLogin();
+document.addEventListener('keydown',e=>{
+  if(e.ctrlKey&&e.shiftKey&&e.key==='A'){e.preventDefault();toggleAdmin();}
+  if(e.key==='Escape'){closeLogin();closeEditor();closeLinkModal();}
 });
 
 // ==================== INIT ====================
 load();
 render();
+handleHash();
+window.addEventListener('hashchange',handleHash);
 </script>
 </body>
 </html>
