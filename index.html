@@ -8,9 +8,7 @@
   <script src="https://code.iconify.design/3/3.1.0/iconify.min.js"></script>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
   <script>
-    tailwind.config = {
-      theme: { extend: { colors: { cream: '#FDFCF8', savor: '#F3EFE0' } } }
-    }
+    tailwind.config={theme:{extend:{colors:{cream:'#FDFCF8',savor:'#F3EFE0'}}}}
   </script>
   <style>
     *{margin:0;padding:0;box-sizing:border-box}
@@ -19,62 +17,46 @@
     ::-webkit-scrollbar{width:6px}
     ::-webkit-scrollbar-track{background:#1c1917}
     ::-webkit-scrollbar-thumb{background:#44403c;border-radius:3px}
-
     .reveal{opacity:0;filter:blur(8px);transform:translateY(24px);transition:all 1.2s cubic-bezier(.16,1,.3,1)}
     .reveal.active{opacity:1;filter:blur(0);transform:translateY(0)}
-
     .expandable{max-height:0;overflow:hidden;transition:max-height 500ms cubic-bezier(.16,1,.3,1)}
     .expandable.open{max-height:5000px}
     .arrow{transition:transform 300ms}.arrow.rotated{transform:rotate(180deg)}
-
     @keyframes shimmer{0%{background-position:-200% center}100%{background-position:200% center}}
     .shimmer{background:linear-gradient(90deg,#f5f5f4 0%,#fef3c7 25%,#f5f5f4 50%,#fef3c7 75%,#f5f5f4 100%);background-size:200% auto;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;animation:shimmer 6s linear infinite}
-
     .cursor-glow{position:fixed;width:400px;height:400px;border-radius:50%;background:radial-gradient(circle,rgba(253,224,71,.04) 0%,transparent 70%);pointer-events:none;z-index:9999;transform:translate(-50%,-50%)}
-
     .toast{transform:translateY(100px);opacity:0;transition:all 400ms cubic-bezier(.16,1,.3,1)}
     .toast.show{transform:translateY(0);opacity:1}
-
     .modal-bg{opacity:0;pointer-events:none;transition:opacity 300ms}
     .modal-bg.open{opacity:1;pointer-events:all}
-
     [contenteditable="true"]{outline:2px dashed rgba(253,224,71,.3);outline-offset:2px;border-radius:4px}
     [contenteditable="true"]:focus{outline-color:rgba(253,224,71,.6);background:rgba(253,224,71,.03)}
-
     @keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
     .admin-pulse{animation:pulse 2s ease-in-out infinite}
-
     .card{background:rgba(28,25,23,.5);border:1px solid rgba(255,255,255,.05);border-radius:1rem;transition:all 300ms}
     .card:hover{border-color:rgba(255,255,255,.1)}
     .item-card{background:rgba(255,255,255,.02);border-radius:.75rem;padding:1rem;cursor:pointer;transition:all 300ms}
     .item-card:hover{background:rgba(255,255,255,.05)}
-
-    /* Editor styles */
     .editor-area{min-height:200px;max-height:400px;overflow-y:auto;outline:none;line-height:1.8}
     .editor-area img{max-width:100%;border-radius:.5rem;margin:.5rem 0}
     .toolbar-btn{width:36px;height:36px;border-radius:.5rem;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);color:#a8a29e;cursor:pointer;transition:all 200ms}
     .toolbar-btn:hover{background:rgba(255,255,255,.1);color:#f5f5f4}
-
-    /* Blog content images */
     .blog-content img{max-width:100%;border-radius:.5rem;margin:.75rem 0}
     .blog-content a{color:#fde68a;text-decoration:underline;text-underline-offset:2px}
     .blog-content a:hover{color:#fef3c7}
     .blog-content p{margin-bottom:.5rem}
     .blog-content b,.blog-content strong{color:#e7e5e4}
-
     .link-btn{display:inline-flex;align-items:center;gap:4px;padding:4px 12px;border-radius:9999px;background:rgba(59,130,246,.15);color:#93c5fd;font-size:12px;font-weight:500;text-decoration:none;transition:all 200ms}
     .link-btn:hover{background:rgba(59,130,246,.25);color:#bfdbfe}
   </style>
 </head>
 <body class="antialiased">
 
-<!-- Cursor Glow -->
 <div class="cursor-glow hidden md:block" id="glow"></div>
 
-<!-- Toast -->
 <div id="toast" class="toast fixed bottom-8 left-1/2 -translate-x-1/2 z-[100] bg-stone-800 border border-stone-700 text-stone-100 px-6 py-3 rounded-2xl text-sm font-medium shadow-2xl"><span id="toastMsg"></span></div>
 
-<!-- ========== LOGIN MODAL ========== -->
+<!-- LOGIN MODAL -->
 <div id="loginModal" class="modal-bg fixed inset-0 z-[90] bg-black/70 backdrop-blur-md flex items-center justify-center">
   <div class="bg-stone-900 border border-stone-800 rounded-3xl p-8 w-full max-w-sm mx-4">
     <div class="text-center mb-6">
@@ -91,21 +73,17 @@
   </div>
 </div>
 
-<!-- ========== BLOG EDITOR MODAL ========== -->
+<!-- BLOG EDITOR MODAL -->
 <div id="editorModal" class="modal-bg fixed inset-0 z-[90] bg-black/70 backdrop-blur-md flex items-center justify-center p-4">
   <div class="bg-stone-900 border border-stone-800 rounded-3xl p-6 md:p-8 w-full max-w-2xl max-h-[90vh] overflow-y-auto">
     <div class="flex items-center justify-between mb-6">
       <h3 class="font-serif text-2xl font-medium">✏️ 编辑文章</h3>
       <button onclick="closeEditor()" class="w-9 h-9 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-stone-400 hover:text-stone-100 hover:bg-white/10 transition-all"><span class="iconify text-lg" data-icon="mdi:close"></span></button>
     </div>
-
-    <!-- Title -->
     <div class="mb-4">
       <label class="text-xs uppercase tracking-widest text-stone-500 font-bold mb-2 block">标题</label>
       <input id="editorTitle" type="text" class="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-stone-100 placeholder:text-stone-600 outline-none focus:border-amber-500/50 transition-colors text-lg font-serif" placeholder="输入标题..."/>
     </div>
-
-    <!-- Toolbar -->
     <div class="mb-2">
       <label class="text-xs uppercase tracking-widest text-stone-500 font-bold mb-2 block">内容</label>
       <div class="flex items-center gap-2 mb-2 flex-wrap">
@@ -115,23 +93,17 @@
         <button class="toolbar-btn" onclick="editorInsertLink()" title="插入链接"><span class="iconify" data-icon="mdi:link-variant"></span></button>
         <button class="toolbar-btn" onclick="editorInsertImage()" title="上传图片"><span class="iconify" data-icon="mdi:image-plus"></span></button>
       </div>
-      <div id="editorContent" contenteditable="true" class="editor-area w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-stone-300 font-light focus:border-amber-500/50 transition-colors" data-placeholder="在这里写内容..."></div>
+      <div id="editorContent" contenteditable="true" class="editor-area w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-stone-300 font-light focus:border-amber-500/50 transition-colors"></div>
     </div>
-
-    <!-- External Link -->
     <div class="mb-6">
       <label class="text-xs uppercase tracking-widest text-stone-500 font-bold mb-2 block">外部链接（可选）</label>
       <input id="editorLink" type="url" class="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-stone-100 placeholder:text-stone-600 outline-none focus:border-amber-500/50 transition-colors text-sm" placeholder="https://example.com"/>
       <p class="text-stone-600 text-xs mt-1">填入后会在文章底部显示"查看链接"按钮</p>
     </div>
-
-    <!-- Storage Warning -->
     <div class="mb-6 p-3 rounded-xl bg-amber-500/10 border border-amber-500/20">
-      <p class="text-amber-400/80 text-xs">⚠️ 图片会保存在浏览器中，总容量约5MB。建议单张图片不超过500KB，总计不超过15张图片。</p>
+      <p class="text-amber-400/80 text-xs">⚠️ 图片会保存在浏览器中，总容量约5MB。建议单张图片不超过500KB。</p>
       <p class="text-stone-500 text-xs mt-1">已使用：<span id="storageUsage">0</span> KB</p>
     </div>
-
-    <!-- Buttons -->
     <div class="flex gap-3">
       <button onclick="closeEditor()" class="flex-1 py-3 bg-white/5 border border-white/10 text-stone-400 rounded-xl hover:bg-white/10 transition-colors text-sm font-medium">取消</button>
       <button onclick="saveEditor()" class="flex-1 py-3 bg-stone-100 text-stone-950 rounded-xl hover:scale-105 transition-transform text-sm font-bold">保存文章</button>
@@ -139,7 +111,7 @@
   </div>
 </div>
 
-<!-- ========== LINK INPUT MODAL ========== -->
+<!-- LINK INPUT MODAL -->
 <div id="linkModal" class="modal-bg fixed inset-0 z-[95] bg-black/50 flex items-center justify-center p-4">
   <div class="bg-stone-900 border border-stone-800 rounded-2xl p-6 w-full max-w-sm">
     <h4 class="font-medium mb-3">插入链接</h4>
@@ -151,7 +123,7 @@
   </div>
 </div>
 
-<!-- ========== NAV ========== -->
+<!-- NAV -->
 <nav class="fixed top-0 left-0 right-0 h-16 z-50 backdrop-blur-xl bg-stone-950/80 border-b border-white/5">
   <div class="max-w-3xl mx-auto h-full px-6 flex items-center justify-between">
     <div id="logo" class="flex items-center gap-2 cursor-pointer select-none" onclick="logoClick()">
@@ -159,6 +131,7 @@
       <span class="font-serif text-lg font-medium">我的小世界</span>
     </div>
     <div class="flex items-center gap-3">
+      <a href="https://suiji-name.github.io/myblog/" class="text-stone-500 hover:text-stone-200 transition-colors text-sm hidden md:flex items-center gap-1"><span class="iconify" data-icon="mdi:book-open-outline"></span> 博客</a>
       <div id="adminBadge" class="hidden items-center gap-1.5 px-3 py-1 rounded-full bg-amber-500/20 border border-amber-500/30">
         <span class="w-2 h-2 rounded-full bg-amber-400 admin-pulse"></span>
         <span class="text-amber-400 text-xs font-bold">编辑中</span>
@@ -170,16 +143,14 @@
   </div>
 </nav>
 
-<!-- ========== HERO ========== -->
+<!-- HERO -->
 <section class="relative min-h-screen flex items-center justify-center overflow-hidden">
   <div class="absolute inset-0">
-    <!-- 🔽👇 背景图片：改成你自己的图片文件名 🔽👇 -->
     <img src="https://z-cdn-media.chatglm.cn/files/d6e06fb4-de05-4bd7-b96c-a21ebab7d32d.png?auth_key=1879711014-670401e5f6014c9c8cfd002029d8620e-0-37cbca62e67a0978c401554640e0f9f1" alt="" class="w-full h-full object-cover"/>
     <div class="absolute inset-0 bg-gradient-to-b from-stone-950/50 via-stone-950/70 to-stone-950"></div>
   </div>
   <div class="relative z-10 max-w-3xl mx-auto px-6 text-center pt-16">
     <div class="w-28 h-28 mx-auto mb-8 rounded-full overflow-hidden border-2 border-amber-500/30 shadow-xl shadow-amber-500/10">
-      <!-- 🔽👇 头像图片：改成你自己的图片文件名 🔽👇 -->
       <img src="https://z-cdn-media.chatglm.cn/files/d6e06fb4-de05-4bd7-b96c-a21ebab7d32d.png?auth_key=1879711014-670401e5f6014c9c8cfd002029d8620e-0-37cbca62e67a0978c401554640e0f9f1" alt="" class="w-full h-full object-cover"/>
     </div>
     <h1 class="font-serif text-5xl md:text-7xl font-normal leading-[0.85] tracking-tighter mb-6">
@@ -196,7 +167,7 @@
   </div>
 </section>
 
-<!-- ========== ABOUT ========== -->
+<!-- ABOUT -->
 <section class="py-20 px-6">
   <div class="max-w-3xl mx-auto reveal">
     <div class="card p-8 md:p-10">
@@ -213,7 +184,7 @@
   </div>
 </section>
 
-<!-- ========== THOUGHTS ========== -->
+<!-- THOUGHTS -->
 <section class="py-10 px-6">
   <div class="max-w-3xl mx-auto reveal">
     <div class="flex items-center gap-3 mb-6">
@@ -227,7 +198,7 @@
   </div>
 </section>
 
-<!-- ========== BLOG POSTS ========== -->
+<!-- BLOG POSTS -->
 <section class="py-10 px-6">
   <div class="max-w-3xl mx-auto reveal">
     <div class="flex items-center gap-3 mb-6">
@@ -245,14 +216,14 @@
   </div>
 </section>
 
-<!-- ========== COLUMNS ========== -->
+<!-- COLUMNS -->
 <section class="py-10 pb-24 px-6">
   <div class="max-w-3xl mx-auto reveal">
     <div class="grid grid-cols-1 md:grid-cols-2 gap-6" id="columnsBox"></div>
   </div>
 </section>
 
-<!-- ========== FOOTER ========== -->
+<!-- FOOTER -->
 <footer class="border-t border-white/5 py-8 px-6">
   <div class="max-w-3xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
     <p class="text-stone-600 text-xs">© 2024 我的小世界 · 用 🐾 和爱构建</p>
@@ -266,12 +237,10 @@
 </footer>
 
 <script>
-// ==================== CONFIG ====================
-const ADMIN_PASSWORD = 'maonv';
-const SAVE_KEY = 'myBlogData';
+const ADMIN_PASSWORD='maonv';
+const SAVE_KEY='myBlogData';
 
-// ==================== DEFAULT DATA ====================
-const DEFAULTS = {
+const DEFAULTS={
   name:'猫娘',
   signature:'猫娘征服世界！',
   bio:'在这里记录灵感、想法和一切有趣的事物。欢迎来到我的小世界 ✨',
@@ -297,19 +266,15 @@ const DEFAULTS = {
   ]
 };
 
-// ==================== STATE ====================
-let isAdmin=false, logoCount=0, logoTimer=null, data={}, editingPostId=null;
+let isAdmin=false,logoCount=0,logoTimer=null,data={},editingPostId=null;
 
-// ==================== DATA ====================
 function load(){
   try{const s=localStorage.getItem(SAVE_KEY);data=s?{...DEFAULTS,...JSON.parse(s)}:JSON.parse(JSON.stringify(DEFAULTS));}
   catch{data=JSON.parse(JSON.stringify(DEFAULTS));}
-  // Ensure posts array exists
   if(!data.posts)data.posts=[];
 }
 function save(){localStorage.setItem(SAVE_KEY,JSON.stringify(data));}
 
-// ==================== IMAGE UTILITIES ====================
 function compressImage(file,maxW,quality,cb){
   const reader=new FileReader();
   reader.onload=e=>{
@@ -326,13 +291,8 @@ function compressImage(file,maxW,quality,cb){
   };
   reader.readAsDataURL(file);
 }
+function getStorageSize(){const s=localStorage.getItem(SAVE_KEY)||'';return Math.round(new Blob([s]).size/1024);}
 
-function getStorageSize(){
-  const s=localStorage.getItem(SAVE_KEY)||'';
-  return Math.round(new Blob([s]).size/1024);
-}
-
-// ==================== RENDER ====================
 function render(){
   document.getElementById('heroName').textContent=data.name;
   document.getElementById('heroSig').textContent=data.signature;
@@ -345,11 +305,11 @@ function render(){
 function renderThoughts(){
   const box=document.getElementById('thoughtsBox');
   box.innerHTML=data.thoughts.map(t=>`
-    <div class="card overflow-hidden" id="thought-${t.id}">
+    <div class="card overflow-hidden">
       <div class="flex items-center justify-between p-5 cursor-pointer select-none" onclick="toggleThought(${t.id})">
         <div class="flex-1 min-w-0">
           <div class="flex items-center gap-2">
-            <h3 class="font-medium text-stone-200 truncate ${isAdmin?'editable-title':''}" ${isAdmin?`contenteditable="true" onclick="event.stopPropagation()" onblur="editThoughtTitle(${t.id},this.textContent)"`:''}  >${t.title}</h3>
+            <h3 class="font-medium text-stone-200 truncate" ${isAdmin?`contenteditable="true" onclick="event.stopPropagation()" onblur="editThoughtTitle(${t.id},this.textContent)"`:''}>${t.title}</h3>
             ${isAdmin?`<button class="shrink-0 w-6 h-6 rounded bg-red-500/20 text-red-400 flex items-center justify-center hover:bg-red-500/30 transition-colors" onclick="event.stopPropagation();delThought(${t.id})" title="删除"><span class="iconify text-sm" data-icon="mdi:close"></span></button>`:''}
           </div>
           <span class="text-stone-600 text-xs">${t.date}</span>
@@ -358,7 +318,7 @@ function renderThoughts(){
       </div>
       <div class="expandable ${t.open?'open':''}">
         <div class="px-5 pb-5">
-          <div class="border-t border-white/5 pt-4 text-stone-400 font-light leading-relaxed" ${isAdmin?`contenteditable="true" onblur="editThoughtContent(${t.id},this.innerText)"`:''}>${t.content}</div>
+          <div class="border-t border-white/5 pt-4 text-stone-400 font-light leading-relaxed" ${isAdmin?`contenteditable="true" onclick="event.stopPropagation()" onblur="editThoughtContent(${t.id},this.innerText)"`:''}>${t.content}</div>
           ${t.link?`<a href="${t.link}" target="_blank" rel="noopener" class="link-btn mt-3 inline-flex" onclick="event.stopPropagation()"><span class="iconify text-sm" data-icon="mdi:open-in-new"></span> 查看链接</a>`:''}
         </div>
       </div>
@@ -376,7 +336,7 @@ function renderPosts(){
       <div class="flex items-center justify-between p-5 cursor-pointer select-none" onclick="togglePost(${p.id})">
         <div class="flex-1 min-w-0">
           <div class="flex items-center gap-2">
-            <h3 class="font-serif text-xl font-medium text-stone-200 truncate ${isAdmin?'editable-title':''}" ${isAdmin?`contenteditable="true" onclick="event.stopPropagation()" onblur="editPostTitle(${p.id},this.textContent)"`:''}>${p.title}</h3>
+            <h3 class="font-serif text-xl font-medium text-stone-200 truncate" ${isAdmin?`contenteditable="true" onclick="event.stopPropagation()" onblur="editPostTitle(${p.id},this.textContent)"`:''}>${p.title}</h3>
             ${isAdmin?`
               <button class="shrink-0 w-6 h-6 rounded bg-blue-500/20 text-blue-400 flex items-center justify-center hover:bg-blue-500/30 transition-colors" onclick="event.stopPropagation();openEditor(${p.id})" title="编辑"><span class="iconify text-sm" data-icon="mdi:pencil"></span></button>
               <button class="shrink-0 w-6 h-6 rounded bg-red-500/20 text-red-400 flex items-center justify-center hover:bg-red-500/30 transition-colors" onclick="event.stopPropagation();delPost(${p.id})" title="删除"><span class="iconify text-sm" data-icon="mdi:close"></span></button>
@@ -388,7 +348,7 @@ function renderPosts(){
       </div>
       <div class="expandable ${p.open?'open':''}">
         <div class="px-5 pb-5">
-          <div class="border-t border-white/5 pt-4 text-stone-400 font-light leading-relaxed blog-content">${p.content}</div>
+          <div class="border-t border-white/5 pt-4 text-stone-400 font-light leading-relaxed blog-content" onclick="event.stopPropagation()">${p.content}</div>
           ${p.link?`<a href="${p.link}" target="_blank" rel="noopener" class="link-btn mt-3 inline-flex" onclick="event.stopPropagation()"><span class="iconify text-sm" data-icon="mdi:open-in-new"></span> 查看链接</a>`:''}
           ${isAdmin?`<div class="mt-3 pt-3 border-t border-white/5 flex items-center gap-2"><span class="text-stone-600 text-xs">分享链接：</span><code class="text-xs text-stone-500 bg-white/5 px-2 py-1 rounded select-all">${location.origin}${location.pathname}#post-${p.id}</code></div>`:''}
         </div>
@@ -402,7 +362,7 @@ function renderColumns(){
   box.innerHTML=data.columns.map(col=>`
     <div class="card overflow-hidden">
       <div class="flex items-center justify-between p-5 cursor-pointer select-none" onclick="toggleCol('${col.id}')">
-        <h3 class="font-serif text-xl font-medium ${isAdmin?'editable-title':''}" ${isAdmin?`contenteditable="true" onclick="event.stopPropagation()" onblur="editColTitle('${col.id}',this.textContent)"`:''}>${col.title}</h3>
+        <h3 class="font-serif text-xl font-medium" ${isAdmin?`contenteditable="true" onclick="event.stopPropagation()" onblur="editColTitle('${col.id}',this.textContent)"`:''}>${col.title}</h3>
         <span class="iconify arrow text-stone-500 text-xl ${col.open?'rotated':''}" data-icon="mdi:chevron-down"></span>
       </div>
       <div class="expandable ${col.open?'open':''}">
@@ -412,7 +372,7 @@ function renderColumns(){
               <div class="flex items-center justify-between">
                 <div class="flex-1 min-w-0">
                   <div class="flex items-center gap-2">
-                    <h4 class="text-sm font-medium text-stone-200 truncate ${isAdmin?'editable-title':''}" ${isAdmin?`contenteditable="true" onclick="event.stopPropagation()" onblur="editColItemTitle('${col.id}',${i},this.textContent)"`:''}>${it.title}</h4>
+                    <h4 class="text-sm font-medium text-stone-200 truncate" ${isAdmin?`contenteditable="true" onclick="event.stopPropagation()" onblur="editColItemTitle('${col.id}',${i},this.textContent)"`:''}>${it.title}</h4>
                     ${isAdmin?`<button class="shrink-0 w-5 h-5 rounded bg-red-500/20 text-red-400 flex items-center justify-center hover:bg-red-500/30 transition-colors" style="font-size:10px" onclick="event.stopPropagation();delColItem('${col.id}',${i})" title="删除"><span class="iconify" data-icon="mdi:close"></span></button>`:''}
                   </div>
                   <span class="text-stone-600 text-xs">${it.date}</span>
@@ -420,25 +380,23 @@ function renderColumns(){
                 <span class="iconify arrow text-stone-600 text-lg ml-2 ${it.open?'rotated':''}" data-icon="mdi:chevron-down"></span>
               </div>
               <div class="expandable ${it.open?'open':''}">
-                <div class="mt-3 pt-3 border-t border-white/5 text-stone-400 text-sm font-light leading-relaxed blog-content" ${isAdmin?`contenteditable="true" onblur="editColItemContent('${col.id}',${i},this.innerText)"`:''}>${it.content}</div>
+                <div class="mt-3 pt-3 border-t border-white/5 text-stone-400 text-sm font-light leading-relaxed blog-content" ${isAdmin?`contenteditable="true" onclick="event.stopPropagation()" onblur="editColItemContent('${col.id}',${i},this.innerText)"`:''}>${it.content}</div>
                 ${it.link?`<a href="${it.link}" target="_blank" rel="noopener" class="link-btn mt-2 inline-flex" onclick="event.stopPropagation()"><span class="iconify text-sm" data-icon="mdi:open-in-new"></span> 查看链接</a>`:''}
               </div>
             </div>
           `).join('')}
-          ${isAdmin?`<button class="w-full py-2 rounded-xl border border-dashed border-white/10 text-stone-600 text-xs hover:text-stone-400 hover:border-white/20 transition-colors" onclick="addColItem('${col.id}')">+ 添加新条目</button>`:''}
+          ${isAdmin?`<button class="w-full py-2 rounded-xl border border-dashed border-white/10 text-stone-600 text-xs hover:text-stone-400 hover:border-white/20 transition-colors" onclick="event.stopPropagation();addColItem('${col.id}')">+ 添加新条目</button>`:''}
         </div>
       </div>
     </div>
   `).join('');
 }
 
-// ==================== TOGGLE ====================
 function toggleThought(id){const t=data.thoughts.find(x=>x.id===id);if(!t)return;t.open=!t.open;save();renderThoughts();}
 function togglePost(id){const p=data.posts.find(x=>x.id===id);if(!p)return;p.open=!p.open;save();renderPosts();if(p.open)history.replaceState(null,'',`#post-${id}`);}
 function toggleCol(cid){const c=data.columns.find(x=>x.id===cid);if(!c)return;c.open=!c.open;save();renderColumns();}
 function toggleColItem(cid,i){const c=data.columns.find(x=>x.id===cid);if(!c||!c.items[i])return;c.items[i].open=!c.items[i].open;save();renderColumns();}
 
-// ==================== INLINE EDIT ====================
 function editThoughtTitle(id,v){const t=data.thoughts.find(x=>x.id===id);if(t){t.title=v.trim()||'无标题';save();toast('标题已保存 ✅');}}
 function editThoughtContent(id,v){const t=data.thoughts.find(x=>x.id===id);if(t){t.content=v;save();toast('已保存 ✅');}}
 function editPostTitle(id,v){const p=data.posts.find(x=>x.id===id);if(p){p.title=v.trim()||'无标题';save();toast('标题已保存 ✅');}}
@@ -446,7 +404,6 @@ function editColTitle(cid,v){const c=data.columns.find(x=>x.id===cid);if(c){c.ti
 function editColItemTitle(cid,i,v){const c=data.columns.find(x=>x.id===cid);if(c&&c.items[i]){c.items[i].title=v.trim()||'无标题';save();toast('标题已保存 ✅');}}
 function editColItemContent(cid,i,v){const c=data.columns.find(x=>x.id===cid);if(c&&c.items[i]){c.items[i].content=v;save();toast('已保存 ✅');}}
 
-// ==================== ADD / DELETE ====================
 function addThought(){
   data.thoughts.unshift({id:Date.now(),title:'新的想法',content:'在这里写下你的想法...',date:today(),link:'',open:true});
   save();renderThoughts();toast('已添加 ✨');
@@ -461,14 +418,11 @@ function addColItem(cid){
 function delColItem(cid,i){const c=data.columns.find(x=>x.id===cid);if(!c)return;c.items.splice(i,1);save();renderColumns();toast('已删除');}
 function today(){return new Date().toISOString().slice(0,10).replace(/-/g,'.');}
 
-// ==================== BLOG EDITOR ====================
 function openEditor(postId){
   if(!isAdmin)return;
   editingPostId=postId||null;
-  const modal=document.getElementById('editorModal');
   if(postId){
-    const p=data.posts.find(x=>x.id===postId);
-    if(!p)return;
+    const p=data.posts.find(x=>x.id===postId);if(!p)return;
     document.getElementById('editorTitle').value=p.title;
     document.getElementById('editorContent').innerHTML=p.content;
     document.getElementById('editorLink').value=p.link||'';
@@ -478,7 +432,7 @@ function openEditor(postId){
     document.getElementById('editorLink').value='';
   }
   document.getElementById('storageUsage').textContent=getStorageSize();
-  modal.classList.add('open');
+  document.getElementById('editorModal').classList.add('open');
   setTimeout(()=>document.getElementById('editorTitle').focus(),200);
 }
 function closeEditor(){document.getElementById('editorModal').classList.remove('open');editingPostId=null;}
@@ -487,11 +441,7 @@ function saveEditor(){
   const title=document.getElementById('editorTitle').value.trim()||'无标题';
   const content=document.getElementById('editorContent').innerHTML;
   const link=document.getElementById('editorLink').value.trim();
-
-  // Check storage
-  const size=getStorageSize();
-  if(size>4500){toast('⚠️ 存储空间不足！请删除一些图片或文章');return;}
-
+  if(getStorageSize()>4500){toast('⚠️ 存储空间不足！');return;}
   if(editingPostId){
     const p=data.posts.find(x=>x.id===editingPostId);
     if(p){p.title=title;p.content=content;p.link=link;save();renderPosts();toast('文章已更新 ✅');}
@@ -502,9 +452,7 @@ function saveEditor(){
   closeEditor();
 }
 
-// Toolbar commands
 function editorCmd(cmd){document.execCommand(cmd,false,null);document.getElementById('editorContent').focus();}
-
 function editorInsertLink(){
   document.getElementById('linkUrlInput').value='';
   document.getElementById('linkModal').classList.add('open');
@@ -516,7 +464,6 @@ function confirmLink(){
   if(url){document.getElementById('editorContent').focus();document.execCommand('createLink',false,url);}
   closeLinkModal();
 }
-
 function editorInsertImage(){
   const input=document.createElement('input');
   input.type='file';input.accept='image/*';
@@ -533,7 +480,6 @@ function editorInsertImage(){
   input.click();
 }
 
-// ==================== ADMIN MODE ====================
 function toggleAdmin(){isAdmin?logoutAdmin():openLogin();}
 function openLogin(){
   document.getElementById('loginModal').classList.add('open');
@@ -555,7 +501,6 @@ function updateAdmin(){
   const addP=document.getElementById('addPostBtn');
   const footerBtns=document.getElementById('adminFooterBtns');
   const btn=document.getElementById('adminBtn');
-
   if(isAdmin){
     badge.classList.remove('hidden');badge.classList.add('flex');
     addT.classList.remove('hidden');addT.classList.add('flex');
@@ -584,37 +529,27 @@ function updateAdmin(){
   }
 }
 
-// Logo triple-click
 function logoClick(){
   logoCount++;clearTimeout(logoTimer);
   logoTimer=setTimeout(()=>{logoCount=0;},600);
   if(logoCount>=3){logoCount=0;toggleAdmin();}
 }
 
-// ==================== EXPORT / IMPORT ====================
 function exportData(){
   const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
-  const a=document.createElement('a');
-  a.href=URL.createObjectURL(blob);
-  a.download='my-blog-data.json';
-  a.click();toast('数据已导出 📁');
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='my-blog-data.json';a.click();toast('数据已导出 📁');
 }
 function importDataClick(){document.getElementById('importFileInput').click();}
 function importData(e){
   const file=e.target.files[0];if(!file)return;
   const reader=new FileReader();
   reader.onload=ev=>{
-    try{
-      const imported=JSON.parse(ev.target.result);
-      data={...DEFAULTS,...imported};
-      save();render();toast('数据已导入 ✅');
-    }catch{toast('导入失败：文件格式错误 ❌');}
+    try{data={...DEFAULTS,...JSON.parse(ev.target.result)};save();render();toast('数据已导入 ✅');}
+    catch{toast('导入失败 ❌');}
   };
-  reader.readAsText(file);
-  e.target.value='';
+  reader.readAsText(file);e.target.value='';
 }
 
-// ==================== HASH NAVIGATION ====================
 function handleHash(){
   const h=location.hash;
   if(h.startsWith('#post-')){
@@ -626,7 +561,6 @@ function handleHash(){
   }
 }
 
-// ==================== UTILITIES ====================
 const glow=document.getElementById('glow');
 document.addEventListener('mousemove',e=>{glow.style.left=e.clientX+'px';glow.style.top=e.clientY+'px';});
 
@@ -641,10 +575,7 @@ document.addEventListener('keydown',e=>{
   if(e.key==='Escape'){closeLogin();closeEditor();closeLinkModal();}
 });
 
-// ==================== INIT ====================
-load();
-render();
-handleHash();
+load();render();handleHash();
 window.addEventListener('hashchange',handleHash);
 </script>
 </body>
