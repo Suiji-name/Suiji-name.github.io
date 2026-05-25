@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>我的小世界</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://code.iconify.design/3/3.1.0/iconify.min.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: { extend: { colors: { cream: '#FDFCF8', savor: '#F3EFE0' } } }
+    }
+  </script>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Inter', sans-serif; background: #0c0a09; color: #f5f5f4; }
+    .font-serif { font-family: 'Playfair Display', serif; }
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: #1c1917; }
+    ::-webkit-scrollbar-thumb { background: #44403c; border-radius: 3px; }
+
+    .reveal {
+      opacity: 0; filter: blur(8px); transform: translateY(24px);
+      transition: all 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .reveal.active { opacity: 1; filter: blur(0); transform: translateY(0); }
+
+    .expandable { max-height: 0; overflow: hidden; transition: max-height 500ms cubic-bezier(0.16,1,0.3,1); }
+    .expandable.open { max-height: 2000px; }
+    .arrow { transition: transform 300ms; }
+    .arrow.rotated { transform: rotate(180deg); }
+
+    @keyframes shimmer {
+      0% { background-position: -200% center; }
+      100% { background-position: 200% center; }
+    }
+    .shimmer {
+      background: linear-gradient(90deg, #f5f5f4 0%, #fef3c7 25%, #f5f5f4 50%, #fef3c7 75%, #f5f5f4 100%);
+      background-size: 200% auto; -webkit-background-clip: text; background-clip: text;
+      -webkit-text-fill-color: transparent; animation: shimmer 6s linear infinite;
+    }
+
+    .cursor-glow {
+      position: fixed; width: 400px; height: 400px; border-radius: 50%;
+      background: radial-gradient(circle, rgba(253,224,71,0.04) 0%, transparent 70%);
+      pointer-events: none; z-index: 9999; transform: translate(-50%, -50%);
+    }
+
+    .toast { transform: translateY(100px); opacity: 0; transition: all 400ms cubic-bezier(0.16,1,0.3,1); }
+    .toast.show { transform: translateY(0); opacity: 1; }
+
+    .modal-bg { opacity: 0; pointer-events: none; transition: opacity 300ms; }
+    .modal-bg.open { opacity: 1; pointer-events: all; }
+
+    [contenteditable="true"] { outline: 2px dashed rgba(253,224,71,0.3); outline-offset: 4px; border-radius: 4px; }
+    [contenteditable="true"]:focus { outline-color: rgba(253,224,71,0.6); background: rgba(253,224,71,0.03); }
+
+    @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.5} }
+    .admin-pulse { animation: pulse 2s ease-in-out infinite; }
+
+    .card { background: rgba(28,25,23,0.5); border: 1px solid rgba(255,255,255,0.05); border-radius: 1rem; transition: all 300ms; }
+    .card:hover { border-color: rgba(255,255,255,0.1); }
+
+    .item-card { background: rgba(255,255,255,0.02); border-radius: 0.75rem; padding: 1rem; cursor: pointer; transition: all 300ms; }
+    .item-card:hover { background: rgba(255,255,255,0.05); }
+  </style>
+</head>
+<body class="antialiased">
+
+<!-- Cursor Glow -->
+<div class="cursor-glow hidden md:block" id="glow"></div>
+
+<!-- Toast -->
+<div id="toast" class="toast fixed bottom-8 left-1/2 -translate-x-1/2 z-[100] bg-stone-800 border border-stone-700 text-stone-100 px-6 py-3 rounded-2xl text-sm font-medium shadow-2xl">
+  <span id="toastMsg"></span>
+</div>
+
+<!-- Login Modal -->
+<div id="loginModal" class="modal-bg fixed inset-0 z-[90] bg-black/70 backdrop-blur-md flex items-center justify-center">
+  <div class="bg-stone-900 border border-stone-800 rounded-3xl p-8 w-full max-w-sm mx-4">
+    <div class="text-center mb-6">
+      <span class="text-4xl">🔐</span>
+      <h3 class="font-serif text-2xl font-medium mt-3">管理员登录</h3>
+      <p class="text-stone-500 text-sm mt-1">输入密码以进入编辑模式</p>
+    </div>
+    <input id="pwdInput" type="password" placeholder="输入密码..." class="w-full px-5 py-3 bg-white/5 border border-white/10 rounded-xl text-stone-100 placeholder:text-stone-600 outline-none focus:border-amber-500/50 transition-colors text-center text-lg mb-4" onkeydown="if(event.key==='Enter')tryLogin()" />
+    <div class="flex gap-3">
+      <button onclick="closeLogin()" class="flex-1 py-3 bg-white/5 border border-white/10 text-stone-400 rounded-xl hover:bg-white/10 transition-colors text-sm font-medium">取消</button>
+      <button onclick="tryLogin()" class="flex-1 py-3 bg-stone-100 text-stone-950 rounded-xl hover:scale-105 transition-transform text-sm font-bold">登录</button>
+    </div>
+    <p id="loginErr" class="text-red-400 text-xs text-center mt-3 hidden">密码错误</p>
+  </div>
+</div>
+
+<!-- ========== NAV ========== -->
+<nav class="fixed top-0 left-0 right-0 h-16 z-50 backdrop-blur-xl bg-stone-950/80 border-b border-white/5">
+  <div class="max-w-3xl mx-auto h-full px-6 flex items-center justify-between">
+    <div id="logo" class="flex items-center gap-2 cursor-pointer select-none" onclick="logoClick()">
+      <span class="text-2xl">🐱</span>
+      <span class="font-serif text-lg font-medium">我的小世界</span>
+    </div>
+    <div class="flex items-center gap-3">
+      <div id="adminBadge" class="hidden items-center gap-1.5 px-3 py-1 rounded-full bg-amber-500/20 border border-amber-500/30">
+        <span class="w-2 h-2 rounded-full bg-amber-400 admin-pulse"></span>
+        <span class="text-amber-400 text-xs font-bold">编辑中</span>
+      </div>
+      <button id="adminBtn" onclick="toggleAdmin()" class="w-9 h-9 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-stone-500 hover:text-stone-300 hover:bg-white/10 transition-all" title="管理员模式 (Ctrl+Shift+A)">
+        <span class="iconify text-lg" data-icon="mdi:shield-lock-outline"></span>
+      </button>
+    </div>
+  </div>
+</nav>
+
+<!-- ========== HERO ========== -->
+<section class="relative min-h-screen flex items-center justify-center overflow-hidden">
+  <div class="absolute inset-0">
+    <!-- 🔽 背景图片：替换 src 为你自己的图片路径 🔽 -->
+    <img src="background.png" />
+    <div class="absolute inset-0 bg-gradient-to-b from-stone-950/50 via-stone-950/70 to-stone-950"></div>
+  </div>
+  <div class="relative z-10 max-w-3xl mx-auto px-6 text-center pt-16">
+    <div class="w-28 h-28 mx-auto mb-8 rounded-full overflow-hidden border-2 border-amber-500/30 shadow-xl shadow-amber-500/10">
+      <!-- 🔽 头像图片：替换 src 为你自己的图片路径 🔽 -->
+      <img src="head.jpg" />
+    </div>
+    <h1 class="font-serif text-5xl md:text-7xl font-normal leading-[0.85] tracking-tighter mb-6">
+      <span class="shimmer" id="heroName" data-key="name">猫娘</span>
+    </h1>
+    <p class="text-xl md:text-2xl font-light text-amber-400/90 mb-6 italic" id="heroSig" data-key="signature">猫娘征服世界！</p>
+    <p class="text-stone-400 font-light leading-relaxed max-w-lg mx-auto" id="heroBio" data-key="bio">在这里记录灵感、想法和一切有趣的事物。欢迎来到我的小世界 ✨</p>
+    <div class="mt-16 flex flex-col items-center gap-2 text-stone-600">
+      <span class="text-xs uppercase tracking-widest">向下探索</span>
+      <div class="w-5 h-8 border border-stone-700 rounded-full flex justify-center pt-1.5">
+        <div class="w-1 h-2 bg-stone-500 rounded-full animate-bounce"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== ABOUT ========== -->
+<section class="py-20 px-6">
+  <div class="max-w-3xl mx-auto reveal">
+    <div class="card p-8 md:p-10">
+      <div class="flex items-center gap-3 mb-6">
+        <span class="text-2xl">✨</span>
+        <h2 class="font-serif text-2xl font-medium" id="aboutTitle" data-key="aboutTitle">关于我</h2>
+      </div>
+      <div class="text-stone-400 font-light leading-relaxed space-y-3" id="aboutContent" data-key="aboutContent">
+        <p>你好呀！我是一个喜欢创造和思考的人。</p>
+        <p>平时喜欢画画、写代码、看漫画，偶尔也会发呆想一些乱七八糟的事情。这个博客是我的秘密基地，用来记录脑子里的各种想法。</p>
+        <p>如果你也有有趣的灵感，欢迎交流 🐾</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ========== THOUGHTS ========== -->
+<section class="py-10 px-6">
+  <div class="max-w-3xl mx-auto reveal">
+    <div class="flex items-center gap-3 mb-6">
+      <span class="text-2xl">💭</span>
+      <h2 class="font-serif text-2xl font-medium">一些想法</h2>
+      <button id="addThoughtBtn" class="hidden ml-auto w-8 h-8 rounded-lg bg-amber-500/20 text-amber-400 items-center justify-center hover:bg-amber-500/30 transition-colors" onclick="addThought()">
+        <span class="iconify" data-icon="mdi:plus"></span>
+      </button>
+    </div>
+    <div class="space-y-3" id="thoughtsBox"></div>
+  </div>
+</section>
+
+<!-- ========== COLUMNS ========== -->
+<section class="py-10 pb-24 px-6">
+  <div class="max-w-3xl mx-auto reveal">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6" id="columnsBox"></div>
+  </div>
+</section>
+
+<!-- ========== FOOTER ========== -->
+<footer class="border-t border-white/5 py-8 px-6">
+  <div class="max-w-3xl mx-auto text-center">
+    <p class="text-stone-600 text-xs">© 2024 我的小世界 · 用 🐾 和爱构建</p>
+  </div>
+</footer>
+
+<script>
+// ==================== CONFIG ====================
+const ADMIN_PASSWORD = 'maonv'; // ← 修改你的管理员密码
+const SAVE_KEY = 'myBlogData';
+
+// ==================== DEFAULT DATA ====================
+const DEFAULTS = {
+  name: 'Double D',
+  signature: '猫娘征服世界！',
+  bio: '在这里记录灵感、想法和一切有趣的事物。欢迎来到我的小世界 ✨',
+  aboutTitle: '关于我',
+  aboutContent: '<p>你好呀！我是一个喜欢创造和思考的人。</p><p>平时喜欢画画、写代码、看漫画，偶尔也会发呆想一些乱七八糟的事情。这个博客是我的秘密基地，用来记录脑子里的各种想法。</p><p>如果你也有有趣的灵感，欢迎交流 🐾</p>',
+  thoughts: [
+    { id: 1, title: '为什么猫咪总是那么淡定？', content: '因为它们知道，这个世界终将属于自己。人慌慌张张地活着，猫却悠然自得地俯视一切。也许我们都该学学猫的哲学。', date: '2024.12.15', open: false },
+    { id: 2, title: '深夜写代码的仪式感', content: '泡一杯热可可，戴上耳机放点轻音乐，然后让手指在键盘上跳舞。这大概就是我理解的幸福——在安静的黑夜里，用代码创造一些什么。', date: '2024.12.10', open: false },
+    { id: 3, title: '关于「完美主义」这件事', content: '追求完美本身没有错，错的是让完美成为不开始的理由。先完成，再完美。这句话我对自己说了无数遍，希望这次能真正记住。', date: '2024.12.05', open: false },
+  ],
+  columns: [
+    { id: 'col1', title: '📝 灵感收集', open: false, items: [
+      { title: '如果城市会说话', content: '想象一下，如果每座城市都有自己的声音。东京是电子合成器的嗡鸣，巴黎是手风琴的悠扬，而我的城市是……键盘的敲击声。', date: '2024.12.12', open: false },
+      { title: '颜色与情绪的实验', content: '今天试着用不同颜色搭配来写代码界面，发现暖色调让人更放松，冷色调让人更专注。也许我应该根据心情来选择配色方案。', date: '2024.12.08', open: false },
+      { title: '窗台上的小花', content: '那盆快要枯萎的多肉，在我连续浇水三天后居然活了过来。生命力的顽强让人感动，也让我相信：有些事情，再坚持一下就好。', date: '2024.12.01', open: false },
+    ]},
+    { id: 'col2', title: '📚 学习笔记', open: false, items: [
+      { title: 'CSS 动画性能优化', content: '使用 transform 和 opacity 做动画，避免触发 layout 和 paint。will-change 属性要慎用，只在需要时加上，动画结束后移除。', date: '2024.12.14', open: false },
+      { title: 'JavaScript 闭包理解', content: '闭包 = 函数 + 它能访问的外部变量。就像一个背包，函数走到哪都背着它需要的东西。最经典的应用：模块模式和柯里化。', date: '2024.12.09', open: false },
+      { title: '设计中的留白艺术', content: '留白不是空白，是呼吸。好的设计让眼睛有地方休息，让信息有层次感。少即是多，但少不等于简陋。', date: '2024.12.03', open: false },
+    ]},
+  ]
+};
+
+// ==================== STATE ====================
+let isAdmin = false;
+let logoCount = 0;
+let logoTimer = null;
+let data = {};
+
+// ==================== DATA ====================
+function load() {
+  try {
+    const s = localStorage.getItem(SAVE_KEY);
+    data = s ? { ...DEFAULTS, ...JSON.parse(s) } : JSON.parse(JSON.stringify(DEFAULTS));
+  } catch { data = JSON.parse(JSON.stringify(DEFAULTS)); }
+}
+function save() { localStorage.setItem(SAVE_KEY, JSON.stringify(data)); }
+
+// ==================== RENDER ====================
+function render() {
+  // Hero
+  document.getElementById('heroName').textContent = data.name;
+  document.getElementById('heroSig').textContent = data.signature;
+  document.getElementById('heroBio').textContent = data.bio;
+  // About
+  document.getElementById('aboutTitle').textContent = data.aboutTitle;
+  document.getElementById('aboutContent').innerHTML = data.aboutContent;
+  // Thoughts & Columns
+  renderThoughts();
+  renderColumns();
+  // Admin UI
+  updateAdmin();
+}
+
+function renderThoughts() {
+  const box = document.getElementById('thoughtsBox');
+  box.innerHTML = data.thoughts.map(t => `
+    <div class="card overflow-hidden">
+      <div class="flex items-center justify-between p-5 cursor-pointer select-none" onclick="toggleThought(${t.id})">
+        <div class="flex-1 min-w-0">
+          <div class="flex items-center gap-2">
+            <h3 class="font-medium text-stone-200 truncate">${t.title}</h3>
+            ${isAdmin ? `<button class="shrink-0 w-6 h-6 rounded bg-red-500/20 text-red-400 flex items-center justify-center hover:bg-red-500/30 transition-colors" onclick="event.stopPropagation();delThought(${t.id})" title="删除"><span class="iconify text-sm" data-icon="mdi:close"></span></button>` : ''}
+          </div>
+          <span class="text-stone-600 text-xs">${t.date}</span>
+        </div>
+        <span class="iconify arrow text-stone-500 text-xl ml-3 ${t.open?'rotated':''}" data-icon="mdi:chevron-down"></span>
+      </div>
+      <div class="expandable ${t.open?'open':''}">
+        <div class="px-5 pb-5">
+          <div class="border-t border-white/5 pt-4 text-stone-400 font-light leading-relaxed" ${isAdmin?`contenteditable="true" onblur="editThoughtContent(${t.id},this.innerText)"`:''}>${t.content}</div>
+        </div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function renderColumns() {
+  const box = document.getElementById('columnsBox');
+  box.innerHTML = data.columns.map(col => `
+    <div class="card overflow-hidden">
+      <div class="flex items-center justify-between p-5 cursor-pointer select-none" onclick="toggleCol('${col.id}')">
+        <h3 class="font-serif text-xl font-medium">${col.title}</h3>
+        <span class="iconify arrow text-stone-500 text-xl ${col.open?'rotated':''}" data-icon="mdi:chevron-down"></span>
+      </div>
+      <div class="expandable ${col.open?'open':''}">
+        <div class="px-5 pb-5 space-y-3">
+          ${col.items.map((it,i) => `
+            <div class="item-card" onclick="toggleColItem('${col.id}',${i})">
+              <div class="flex items-center justify-between">
+                <div class="flex-1 min-w-0">
+                  <div class="flex items-center gap-2">
+                    <h4 class="text-sm font-medium text-stone-200 truncate">${it.title}</h4>
+                    ${isAdmin?`<button class="shrink-0 w-5 h-5 rounded bg-red-500/20 text-red-400 flex items-center justify-center hover:bg-red-500/30 transition-colors" style="font-size:10px" onclick="event.stopPropagation();delColItem('${col.id}',${i})" title="删除"><span class="iconify" data-icon="mdi:close"></span></button>`:''}
+                  </div>
+                  <span class="text-stone-600 text-xs">${it.date}</span>
+                </div>
+                <span class="iconify arrow text-stone-600 text-lg ml-2 ${it.open?'rotated':''}" data-icon="mdi:chevron-down"></span>
+              </div>
+              <div class="expandable ${it.open?'open':''}">
+                <div class="mt-3 pt-3 border-t border-white/5 text-stone-400 text-sm font-light leading-relaxed" ${isAdmin?`contenteditable="true" onblur="editColItemContent('${col.id}',${i},this.innerText)"`:''}>${it.content}</div>
+              </div>
+            </div>
+          `).join('')}
+          ${isAdmin?`<button class="w-full py-2 rounded-xl border border-dashed border-white/10 text-stone-600 text-xs hover:text-stone-400 hover:border-white/20 transition-colors" onclick="addColItem('${col.id}')">+ 添加新条目</button>`:''}
+        </div>
+      </div>
+    </div>
+  `).join('');
+}
+
+// ==================== TOGGLE ====================
+function toggleThought(id) {
+  const t = data.thoughts.find(x=>x.id===id); if(!t) return;
+  t.open = !t.open; save(); renderThoughts();
+}
+function toggleCol(cid) {
+  const c = data.columns.find(x=>x.id===cid); if(!c) return;
+  c.open = !c.open; save(); renderColumns();
+}
+function toggleColItem(cid,i) {
+  const c = data.columns.find(x=>x.id===cid); if(!c||!c.items[i]) return;
+  c.items[i].open = !c.items[i].open; save(); renderColumns();
+}
+
+// ==================== ADMIN EDIT ====================
+function editThoughtContent(id,text) {
+  const t = data.thoughts.find(x=>x.id===id); if(t){t.content=text;save();toast('已保存 ✅');}
+}
+function editColItemContent(cid,i,text) {
+  const c = data.columns.find(x=>x.id===cid); if(c&&c.items[i]){c.items[i].content=text;save();toast('已保存 ✅');}
+}
+
+// ==================== ADMIN ADD/DEL ====================
+function addThought() {
+  data.thoughts.unshift({ id:Date.now(), title:'新的想法', content:'在这里写下你的想法...', date:today(), open:true });
+  save(); renderThoughts(); toast('已添加新想法 ✨');
+}
+function delThought(id) {
+  data.thoughts = data.thoughts.filter(x=>x.id!==id);
+  save(); renderThoughts(); toast('已删除');
+}
+function addColItem(cid) {
+  const c = data.columns.find(x=>x.id===cid); if(!c) return;
+  c.items.unshift({ title:'新条目', content:'在这里写内容...', date:today(), open:true });
+  c.open = true; save(); renderColumns(); toast('已添加 ✨');
+}
+function delColItem(cid,i) {
+  const c = data.columns.find(x=>x.id===cid); if(!c) return;
+  c.items.splice(i,1); save(); renderColumns(); toast('已删除');
+}
+
+function today() { return new Date().toISOString().slice(0,10).replace(/-/g,'.'); }
+
+// ==================== ADMIN MODE ====================
+function toggleAdmin() { isAdmin ? logoutAdmin() : openLogin(); }
+
+function openLogin() {
+  document.getElementById('loginModal').classList.add('open');
+  document.getElementById('pwdInput').value = '';
+  document.getElementById('loginErr').classList.add('hidden');
+  setTimeout(()=>document.getElementById('pwdInput').focus(),200);
+}
+function closeLogin() { document.getElementById('loginModal').classList.remove('open'); }
+
+function tryLogin() {
+  if (document.getElementById('pwdInput').value === ADMIN_PASSWORD) {
+    isAdmin = true; closeLogin(); render(); toast('欢迎回来，管理员 🐱');
+  } else {
+    document.getElementById('loginErr').classList.remove('hidden');
+  }
+}
+function logoutAdmin() { isAdmin = false; render(); toast('已退出编辑模式'); }
+
+function updateAdmin() {
+  const badge = document.getElementById('adminBadge');
+  const addBtn = document.getElementById('addThoughtBtn');
+  const btn = document.getElementById('adminBtn');
+
+  if (isAdmin) {
+    badge.classList.remove('hidden'); badge.classList.add('flex');
+    addBtn.classList.remove('hidden'); addBtn.classList.add('flex');
+    btn.classList.add('!bg-amber-500/20','!border-amber-500/30','!text-amber-400');
+    btn.querySelector('.iconify').setAttribute('data-icon','mdi:shield-lock');
+
+    // Make hero & about editable
+    ['heroName','heroSig','heroBio','aboutTitle'].forEach(id => {
+      const el = document.getElementById(id);
+      el.contentEditable = 'true';
+      el.onblur = function(){ data[this.dataset.key]=this.textContent; save(); toast('已保存 ✅'); };
+    });
+    const ac = document.getElementById('aboutContent');
+    ac.contentEditable = 'true';
+    ac.onblur = function(){ data.aboutContent=this.innerHTML; save(); toast('已保存 ✅'); };
+  } else {
+    badge.classList.add('hidden'); badge.classList.remove('flex');
+    addBtn.classList.add('hidden'); addBtn.classList.remove('flex');
+    btn.classList.remove('!bg-amber-500/20','!border-amber-500/30','!text-amber-400');
+    btn.querySelector('.iconify').setAttribute('data-icon','mdi:shield-lock-outline');
+
+    ['heroName','heroSig','heroBio','aboutTitle','aboutContent'].forEach(id => {
+      const el = document.getElementById(id);
+      el.contentEditable = 'false'; el.onblur = null;
+    });
+  }
+}
+
+// Logo triple-click shortcut
+function logoClick() {
+  logoCount++;
+  clearTimeout(logoTimer);
+  logoTimer = setTimeout(()=>{logoCount=0;},600);
+  if (logoCount >= 3) { logoCount=0; toggleAdmin(); }
+}
+
+// ==================== UTILITIES ====================
+// Cursor glow
+const glow = document.getElementById('glow');
+document.addEventListener('mousemove', e => { glow.style.left=e.clientX+'px'; glow.style.top=e.clientY+'px'; });
+
+// Scroll reveal
+const obs = new IntersectionObserver(entries => {
+  entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('active'); });
+}, {threshold:0.1});
+document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+
+// Toast
+let toastT;
+function toast(msg) {
+  const t = document.getElementById('toast');
+  document.getElementById('toastMsg').textContent = msg;
+  t.classList.add('show');
+  clearTimeout(toastT);
+  toastT = setTimeout(()=>t.classList.remove('show'),2000);
+}
+
+// Keyboard shortcuts
+document.addEventListener('keydown', e => {
+  if(e.ctrlKey && e.shiftKey && e.key==='A'){ e.preventDefault(); toggleAdmin(); }
+  if(e.key==='Escape') closeLogin();
+});
+
+// ==================== INIT ====================
+load();
+render();
+</script>
+</body>
+</html>
