@@ -1,2 +1,2 @@
-# Suiji-name.github.io
+# DoubleD-ohno.github.io
 personal blog
